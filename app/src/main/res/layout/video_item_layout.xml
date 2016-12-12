@@ -2,26 +2,38 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:gravity="center_vertical"
+    android:padding="5dp"
     android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:background="#e0e0d8"
+        android:padding="3dp"
+        >
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
+
         android:id="@+id/iv_icon"
+        android:src="@mipmap/ic_launcher"
         />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
         android:id="@+id/tv_name"
         android:text="@string/display_name"
-        android:textSize="14sp"
+        android:padding="5dp"
+        android:layout_toRightOf="@id/iv_icon"
+        android:textSize="18sp"
         android:textColor="#000"
         />
 
     <TextView
+        android:padding="5dp"
         android:layout_alignParentRight="true"
         android:layout_marginRight="10dp"
         android:layout_width="wrap_content"
@@ -29,6 +41,6 @@
         android:id="@+id/tv_duration"
         android:text="@string/duration"
         android:textColor="#000"
-        android:layout_gravity="center_vertical"
         />
+    </RelativeLayout>
 </RelativeLayout>

@@ -1,9 +1,9 @@
 package demo.slash.customplayer;
 
 import android.app.Activity;
-import android.support.v7.app.AppCompatActivity;
+import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
+import android.text.TextUtils;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.VideoView;
@@ -24,10 +24,14 @@ public class PlayerActivity extends Activity {
         String path = getIntent().getData().toString();
 
         videoView = (VideoView) findViewById(R.id.videoView);
-        if(path!=null){
-            videoView.setVideoPath(path);
-            videoView.start();
-        }
 
+        if(!TextUtils.isEmpty(path)){
+            videoView.setVideoURI(Uri.parse(path));
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 }

@@ -11,13 +11,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.net.URI;
 import java.util.List;
 
-import demo.slash.customplayer.MainActivity;
 import demo.slash.customplayer.PlayerActivity;
 import demo.slash.customplayer.R;
 import demo.slash.customplayer.bean.VideoItem;
+import demo.slash.customplayer.player.ThumbnailGener;
 import demo.slash.customplayer.utils.StringUtils;
 
 /**
@@ -29,10 +28,12 @@ public class VideoAdapter extends BaseAdapter implements AdapterView.OnItemClick
     private static final String TAG = "VideoAdapter";
     private final Context mCtx;
     private final List<VideoItem> mList;
+    private final ThumbnailGener mThumbnailGener;
 
-    public VideoAdapter(Context ctx, List<VideoItem> list){
+    public VideoAdapter(final Context ctx, List<VideoItem> list){
         mCtx = ctx;
         mList = list;
+        mThumbnailGener = new ThumbnailGener(null);
     }
 
     @Override
@@ -56,17 +57,18 @@ public class VideoAdapter extends BaseAdapter implements AdapterView.OnItemClick
         if(null==convertView){
             holder = new ViewHolder();
             convertView = View.inflate(mCtx, R.layout.video_item_layout,null);
+
+            holder.ivIcon = (ImageView) convertView.findViewById(R.id.iv_icon);
+            holder.tvName = (TextView) convertView.findViewById(R.id.tv_name);
+            holder.tvDuration = (TextView)convertView.findViewById(R.id.tv_duration);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.ivIcon = (ImageView) convertView.findViewById(R.id.iv_icon);
-        holder.tvName = (TextView) convertView.findViewById(R.id.tv_name);
-        holder.tvDuration = (TextView)convertView.findViewById(R.id.tv_duration);
-
         holder.tvName.setText((getItem(position)).getDisplayName());
         holder.tvDuration.setText(StringUtils.convertTimeLong(getItem(position).getDuration()));
+        mThumbnailGener.showThumbnail(holder.ivIcon,getItem(position).getPath());
 
         return convertView;
     }

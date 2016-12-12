@@ -1,12 +1,12 @@
 package demo.slash.customplayer;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -14,10 +14,9 @@ import java.util.List;
 
 import demo.slash.customplayer.adapter.VideoAdapter;
 import demo.slash.customplayer.bean.VideoItem;
-import demo.slash.customplayer.utils.Logger;
 import demo.slash.customplayer.utils.MediaQueryer;
 
-public class MainActivity extends Activity implements Runnable {
+public class MainActivity extends AppCompatActivity implements Runnable {
 
     public static final String TAG = "VideoPlayer";
     private Handler mHandler = new Handler(){
