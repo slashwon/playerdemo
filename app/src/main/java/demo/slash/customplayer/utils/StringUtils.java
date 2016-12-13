@@ -24,4 +24,8 @@ public class StringUtils {
             }
         }
     }
+
+    public static String displayName(String path){
+        return path.substring(path.lastIndexOf("/")+1);
+    }
 }

@@ -4,13 +4,21 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="demo.slash.customplayer.MainActivity">
+    tools:context=".view.MainActivity">
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Refresh"
+        android:onClick="refresh"
+        android:id="@+id/btn_refresh"
+        />
 
     <ListView
+        android:layout_below="@id/btn_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/lv_list"
-        android:dividerHeight="0dp"
-        android:divider="@android:color/transparent"
+        android:dividerHeight="1dp"
         />
 </RelativeLayout>

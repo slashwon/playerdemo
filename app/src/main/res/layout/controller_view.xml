@@ -4,20 +4,59 @@
                 android:visibility="gone"
               android:layout_height="match_parent">
 
-    <LinearLayout
+    <!--<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:orientation="horizontal"
-        android:background="#000"
+        android:background="#cbc5c5"
+        >
 
-        ></LinearLayout>
+    </LinearLayout>-->
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:orientation="horizontal"
-        android:background="#f00"
+        android:background="#e3e2e3"
         android:layout_alignParentBottom="true"
-        ></LinearLayout>
+        >
+
+        <android.support.v7.widget.AppCompatSeekBar
+            android:padding="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:gravity="center_vertical"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentBottom="true"
+            >
+
+            <android.support.v7.widget.AppCompatImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ib_controll_pre"
+                />
+            <android.support.v7.widget.AppCompatImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:id="@+id/ib_controll_play_stop"
+                android:src="@drawable/selector_btn_play"
+                android:scaleType="centerCrop"
+                />
+            <android.support.v7.widget.AppCompatImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:id="@+id/ib_controll_next"
+                />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
 
 </RelativeLayout>

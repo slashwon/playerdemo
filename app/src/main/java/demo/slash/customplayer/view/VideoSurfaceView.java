@@ -1,28 +1,34 @@
 package demo.slash.customplayer.view;
 
 import android.content.Context;
-import android.media.MediaPlayer;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import java.io.IOException;
-
-import demo.slash.customplayer.MainActivity;
+import demo.slash.customplayer.player.MediaPlayerWrapper;
 import demo.slash.customplayer.utils.Logger;
+import tv.danmaku.ijk.media.player.IMediaPlayer;
+import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
 /**
  * Created by PICO-USER on 2016/12/12.
  */
-public class VideoSurfaceView extends SurfaceView implements MediaPlayer.OnPreparedListener, SurfaceHolder.Callback {
+public class VideoSurfaceView extends SurfaceView implements IjkMediaPlayer.OnPreparedListener, SurfaceHolder.Callback {
 
-    private MediaPlayer mPlayer;
+    private MediaPlayerWrapper mPlayer;
     private SurfaceHolder mSurfaceHolder;
+    private String mPath;
 
     public VideoSurfaceView(Context context) {
         super(context);
         initVideoView();
+    }
+
+    public MediaPlayerWrapper getPlayer(){
+        return mPlayer;
     }
 
     private void initVideoView() {
@@ -39,12 +45,14 @@ public class VideoSurfaceView extends SurfaceView implements MediaPlayer.OnPrepa
         initVideoView();
     }
 
-    public VideoSurfaceView initPlayer(){
+    public void initPlayer(){
         if(null==mPlayer) {
-            mPlayer = new MediaPlayer();
+            mPlayer = new MediaPlayerWrapper();
         }
-        mPlayer.setOnPreparedListener(this);
-        return this;
+    }
+
+    public void setPath(String path){
+        mPath = path;
     }
 
     public void playVideo(String path){
@@ -56,41 +64,35 @@ public class VideoSurfaceView extends SurfaceView implements MediaPlayer.OnPrepa
             Logger.D(MainActivity.TAG,"surface holder is not prepared yet");
             return ;
         }
-        if(!mPlayer.isPlaying()) {
-            mPlayer.stop();
-            if (!TextUtils.isEmpty(path)) {
-                try {
-                    mPlayer.setDataSource(path);
-                    mPlayer.setDisplay(mSurfaceHolder);
-                    mPlayer.prepareAsync();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+        mPlayer.setSurface(mSurfaceHolder);
+        if(!TextUtils.isEmpty(path)){
+            mPlayer.openFile(path);
         }
+    }
+
+    public void startVideo(){
+        mPlayer.start();
     }
 
     public void stopVideo(){
-        if(mPlayer!=null && mPlayer.isPlaying()){
-            mPlayer.stop();
-            mPlayer.release();
-        }
+        mPlayer.stop();
     }
 
     public void pauseVideo(){
-        if(mPlayer!=null && mPlayer.isPlaying()){
-            mPlayer.pause();
-        }
+       mPlayer.pause();
     }
 
     public void resumeVideo(){
-        if(mPlayer!=null && !mPlayer.isPlaying()){
-            mPlayer.start();
+        mPlayer.start();
+    }
+
+    public void fastMove(float d){
+        if(mPlayer!=null){
+            mPlayer.fastMove(d);
         }
     }
 
-    @Override
-    public void onPrepared(MediaPlayer mp) {
+    public void onPrepared(IMediaPlayer mp) {
         mp.start();
         Logger.D(MainActivity.TAG,"player is prepared");
     }
@@ -105,6 +107,7 @@ public class VideoSurfaceView extends SurfaceView implements MediaPlayer.OnPrepa
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         Logger.D(MainActivity.TAG,"holder surface changed");
         mSurfaceHolder = holder;
+        mHandler.sendEmptyMessage(MSG_SURFACE_READY);
     }
 
     @Override
@@ -112,4 +115,19 @@ public class VideoSurfaceView extends SurfaceView implements MediaPlayer.OnPrepa
         mSurfaceHolder = null;
         Logger.D(MainActivity.TAG,"holder surface destroyed");
     }
+
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+            switch (msg.what){
+                case MSG_SURFACE_READY:
+                    playVideo(mPath);
+                    break;
+            }
+        }
+    };
+
+    private static final int MSG_SURFACE_READY=10;
 }

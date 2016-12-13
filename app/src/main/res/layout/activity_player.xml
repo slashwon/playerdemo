@@ -4,17 +4,18 @@
     android:id="@+id/activity_player"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="demo.slash.customplayer.PlayerActivity">
+    tools:context=".view.PlayerActivity">
 
-    <VideoView
+    <demo.slash.customplayer.view.VideoSurfaceView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/videoView"
         />
 
     <include layout="@layout/controller_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#aca8a8"
+             android:id="@+id/layout_controll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#aca8a8"
         />
 </RelativeLayout>

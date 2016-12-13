@@ -11,13 +11,15 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
+
 import java.util.List;
 
-import demo.slash.customplayer.PlayerActivity;
 import demo.slash.customplayer.R;
 import demo.slash.customplayer.bean.VideoItem;
-import demo.slash.customplayer.player.ThumbnailGener;
 import demo.slash.customplayer.utils.StringUtils;
+import demo.slash.customplayer.view.PlayerActivity;
 
 /**
  * Created by Administrator on 2016/12/11 0011.
@@ -28,12 +30,12 @@ public class VideoAdapter extends BaseAdapter implements AdapterView.OnItemClick
     private static final String TAG = "VideoAdapter";
     private final Context mCtx;
     private final List<VideoItem> mList;
-    private final ThumbnailGener mThumbnailGener;
+    private final RequestManager mGlide;
 
     public VideoAdapter(final Context ctx, List<VideoItem> list){
         mCtx = ctx;
         mList = list;
-        mThumbnailGener = new ThumbnailGener(null);
+        mGlide = Glide.with(ctx);
     }
 
     @Override
@@ -68,7 +70,10 @@ public class VideoAdapter extends BaseAdapter implements AdapterView.OnItemClick
 
         holder.tvName.setText((getItem(position)).getDisplayName());
         holder.tvDuration.setText(StringUtils.convertTimeLong(getItem(position).getDuration()));
-        mThumbnailGener.showThumbnail(holder.ivIcon,getItem(position).getPath());
+
+        mGlide.load(getItem(position).getPath())
+                .centerCrop()
+                .into(holder.ivIcon);
 
         return convertView;
     }

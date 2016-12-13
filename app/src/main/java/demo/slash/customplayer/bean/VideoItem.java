@@ -6,16 +6,39 @@ package demo.slash.customplayer.bean;
 
 public class VideoItem {
 
+
     private String displayName;
     private String path;
     private long dateAdded;
     private long duration;
+    private long size;
 
-    public VideoItem(String displayName, String path, long dateAdded, long duration) {
+    @Override
+    public String toString() {
+        return "VideoItem{" +
+                "displayName='" + displayName + '\'' +
+                ", path='" + path + '\'' +
+                ", dateAdded=" + dateAdded +
+                ", duration=" + duration +
+                ", size=" + size +
+                '}';
+    }
+
+    public long getSize() {
+        return size;
+    }
+
+    public void setSize(long size) {
+        this.size = size;
+    }
+
+    public VideoItem(String displayName, String path, long dateAdded, long duration, long size) {
         this.displayName = displayName;
         this.path = path;
         this.dateAdded = dateAdded;
         this.duration = duration;
+        this.size = size ;
+
     }
 
     public String getDisplayName() {
@@ -50,13 +73,4 @@ public class VideoItem {
         this.duration = duration;
     }
 
-    @Override
-    public String toString() {
-        return "VideoItem{" +
-                "displayName='" + displayName + '\'' +
-                ", path='" + path + '\'' +
-                ", dateAdded=" + dateAdded +
-                ", duration=" + duration +
-                '}';
-    }
 }

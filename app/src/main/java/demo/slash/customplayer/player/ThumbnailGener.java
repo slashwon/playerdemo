@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import demo.slash.customplayer.MainActivity;
+import demo.slash.customplayer.view.MainActivity;
 import demo.slash.customplayer.utils.Logger;
 
 /**
