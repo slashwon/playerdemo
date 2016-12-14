@@ -1,24 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".view.MainActivity">
 
-    <Button
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Refresh"
-        android:onClick="refresh"
-        android:id="@+id/btn_refresh"
-        />
+        android:id="@+id/main_refresh"
+        >
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Refresh"
+            android:onClick="refresh"
+            android:id="@+id/btn_refresh"
+            />
+        <include layout="@layout/main_item_operation"
+                 android:layout_height="wrap_content"
+                 android:layout_width="match_parent"
+                 android:id="@+id/main_operate_layout"
+            />
+    </RelativeLayout>
 
     <ListView
-        android:layout_below="@id/btn_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/lv_list"
         android:dividerHeight="1dp"
         />
-</RelativeLayout>
+
+</LinearLayout>

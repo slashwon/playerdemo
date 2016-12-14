@@ -1,12 +1,12 @@
 package demo.slash.customplayer.view;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ListView;
 
@@ -19,7 +19,7 @@ import demo.slash.customplayer.bean.VideoItem;
 import demo.slash.customplayer.data.MediaQueryer;
 import demo.slash.customplayer.data.database.DbOperator;
 
-public class MainActivity extends AppCompatActivity implements Runnable {
+public class MainActivity extends Activity implements Runnable {
 
     public static final String TAG = "VideoPlayer";
     private static final int MSG_QUERY_START = 10;
@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements Runnable {
 
     List<VideoItem> videoList = new ArrayList<>();
     private VideoAdapter mAdapter;
+    private View mOperateLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,19 +67,25 @@ public class MainActivity extends AppCompatActivity implements Runnable {
         mAdapter = new VideoAdapter(MainActivity.this, videoList);
         lvVideos.setAdapter(mAdapter);
         lvVideos.setOnItemClickListener(mAdapter);
+        lvVideos.setOnItemLongClickListener(mAdapter);
+
+        mOperateLayout = findViewById(R.id.main_operate_layout);
+    }
+
+    public View getOperateView(){
+        return mOperateLayout;
     }
 
     @Override
     public void run() {
         mHandler.sendEmptyMessage(MSG_QUERY_START);
-        videoList.addAll(MediaQueryer.instance().getVideos());
+        videoList.addAll(MediaQueryer.instance().eachAll());
         mHandler.sendEmptyMessage(MSG_QUERY_END);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        DbOperator.close();
     }
 
     public void refresh(View v){

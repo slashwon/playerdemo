@@ -11,6 +11,7 @@ import android.view.WindowManager;
 
 import demo.slash.customplayer.R;
 import demo.slash.customplayer.player.Controller;
+import demo.slash.customplayer.player.MediaPlayerWrapper;
 
 public class PlayerActivity extends Activity {
 
@@ -29,11 +30,14 @@ public class PlayerActivity extends Activity {
         videoView = (VideoSurfaceView) findViewById(R.id.videoView);
         mControllView = findViewById(R.id.layout_controll);
 
+        videoView.setActivity(this);
+
         initGesture();
+
     }
 
     private void initGesture() {
-        mGestureDetector = new GestureDetector(this, new Controller(videoView,mControllView));
+        mGestureDetector = new GestureDetector(this, new Controller(this,videoView,mControllView));
     }
 
     @Override
@@ -60,5 +64,8 @@ public class PlayerActivity extends Activity {
     @Override
     protected void onStop() {
         super.onStop();
+    }
+
+    public void updateUIstate(final MediaPlayerWrapper.State state){
     }
 }

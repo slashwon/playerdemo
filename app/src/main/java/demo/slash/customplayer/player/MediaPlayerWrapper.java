@@ -1,5 +1,6 @@
 package demo.slash.customplayer.player;
 
+import android.view.Surface;
 import android.view.SurfaceHolder;
 
 import java.io.IOException;
@@ -16,10 +17,14 @@ public class MediaPlayerWrapper implements IMediaPlayer.OnPreparedListener {
 
     private IjkMediaPlayer mPlayer;
 
-    public void setSurface(SurfaceHolder surfaceHolder) {
+    public void setDisplay(SurfaceHolder surfaceHolder) {
         if(mPlayer!=null){
             mPlayer.setDisplay(surfaceHolder);
         }
+    }
+
+    public void setSurface(Surface s){
+        mPlayer.setSurface(s);
     }
 
     public enum State{
@@ -51,17 +56,28 @@ public class MediaPlayerWrapper implements IMediaPlayer.OnPreparedListener {
         }
     }
 
+    public long getDuration(){
+        return mPlayer.getDuration();
+    }
+
     public void start(){
         if(mPlayer!=null && (mState==State.STOP||mState==State.PAUSE||mState==State.PREPARED)){
             mPlayer.start();
             mState = State.START;
+            updateHandler();
         }
+    }
+
+    // do nothing
+    private void updateHandler() {
+
     }
 
     public void stop(){
         if(mPlayer!=null && mState==State.START){
             mPlayer.stop();
             mState = State.STOP;
+            updateHandler();
         }
     }
 
@@ -69,6 +85,7 @@ public class MediaPlayerWrapper implements IMediaPlayer.OnPreparedListener {
         if(mPlayer!=null && mState==State.START){
             mPlayer.pause();
             mState = State.PAUSE;
+            updateHandler();
         }
     }
 
@@ -79,9 +96,18 @@ public class MediaPlayerWrapper implements IMediaPlayer.OnPreparedListener {
     }
 
     public void fastMove(float d){
-        long currPos = mPlayer.getCurrentPosition();
-        currPos += d;
-        currPos = currPos<=0 ? 0 : currPos;
-        mPlayer.seekTo(currPos*5000);
+        long total = mPlayer.getDuration();
+        long curr = mPlayer.getCurrentPosition();
+        long progress = total/100;
+        float t = curr + progress * (d) / Math.abs(d);
+        t = t<=0 ? 0 : t;
+        t = t>=total ? total : t;
+
+        mPlayer.seekTo((long) t);
+    }
+
+    public void fastRateMove(float rate){
+        long duration = mPlayer.getDuration();
+        mPlayer.seekTo((long) (duration*rate));
     }
 }

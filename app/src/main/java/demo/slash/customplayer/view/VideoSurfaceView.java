@@ -18,9 +18,11 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
  */
 public class VideoSurfaceView extends SurfaceView implements IjkMediaPlayer.OnPreparedListener, SurfaceHolder.Callback {
 
+    private static final int MSG_UPDATE_SB = 100;
     private MediaPlayerWrapper mPlayer;
     private SurfaceHolder mSurfaceHolder;
     private String mPath;
+    private PlayerActivity mActivity;
 
     public VideoSurfaceView(Context context) {
         super(context);
@@ -64,7 +66,7 @@ public class VideoSurfaceView extends SurfaceView implements IjkMediaPlayer.OnPr
             Logger.D(MainActivity.TAG,"surface holder is not prepared yet");
             return ;
         }
-        mPlayer.setSurface(mSurfaceHolder);
+        mPlayer.setDisplay(mSurfaceHolder);
         if(!TextUtils.isEmpty(path)){
             mPlayer.openFile(path);
         }
@@ -72,24 +74,39 @@ public class VideoSurfaceView extends SurfaceView implements IjkMediaPlayer.OnPr
 
     public void startVideo(){
         mPlayer.start();
+        updateSeekbar();
+    }
+
+    private void updateSeekbar() {
+        MediaPlayerWrapper.State state = mPlayer.getState();
+        Message msg = mHandler.obtainMessage(MSG_UPDATE_SB);
+        msg.obj = state;
+        mHandler.sendMessage(msg);
     }
 
     public void stopVideo(){
         mPlayer.stop();
+        updateSeekbar();
     }
 
     public void pauseVideo(){
        mPlayer.pause();
+        updateSeekbar();
     }
 
     public void resumeVideo(){
         mPlayer.start();
+        updateSeekbar();
     }
 
     public void fastMove(float d){
         if(mPlayer!=null){
             mPlayer.fastMove(d);
         }
+    }
+
+    public void fastRateMove(float rate){
+        mPlayer.fastRateMove(rate);
     }
 
     public void onPrepared(IMediaPlayer mp) {
@@ -125,9 +142,19 @@ public class VideoSurfaceView extends SurfaceView implements IjkMediaPlayer.OnPr
                 case MSG_SURFACE_READY:
                     playVideo(mPath);
                     break;
+                case MSG_UPDATE_SB:
+                    MediaPlayerWrapper.State state = (MediaPlayerWrapper.State) msg.obj;
+                    if(mActivity!=null){
+                        mActivity.updateUIstate(state);
+                    }
+                    break;
             }
         }
     };
 
     private static final int MSG_SURFACE_READY=10;
+
+    public void setActivity(PlayerActivity playerActivity) {
+        mActivity = playerActivity;
+    }
 }

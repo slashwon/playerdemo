@@ -14,8 +14,6 @@
 
     <include layout="@layout/controller_view"
              android:id="@+id/layout_controll"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
             android:background="#aca8a8"
         />
 </RelativeLayout>

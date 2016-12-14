@@ -78,8 +78,11 @@ public class MediaQueryer {
                     long date = f.lastModified();
                     long size = f.length();
                     VideoItem videoItem = new VideoItem(path.substring(path.lastIndexOf("/") + 1), path, date, 0,size);
+
                     list.add(videoItem);
-                    DbOperator.insert(videoItem);
+                    if(!DbOperator.exist(path)) {
+                        DbOperator.insert(videoItem);
+                    }
                 }
             }
         }

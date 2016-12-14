@@ -44,6 +44,12 @@ public class DbOperator {
         return delete!=0;
     }
 
+    public static boolean exist(String path){
+        String sqlExist = " select * from "+VideoDbHelper.DB_NAME+" where "+VideoDbHelper.COL_PATH+" = ?";
+        Cursor cursor = sDatabase.rawQuery(sqlExist, new String[]{path});
+        return cursor!=null && cursor.getCount()!=0;
+    }
+
     public static List<VideoItem> query(){
         String sql_query = "select * from "+VideoDbHelper.DB_NAME;
         Cursor cursor = sDatabase.rawQuery(sql_query, null);

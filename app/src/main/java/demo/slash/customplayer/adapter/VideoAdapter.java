@@ -18,14 +18,16 @@ import java.util.List;
 
 import demo.slash.customplayer.R;
 import demo.slash.customplayer.bean.VideoItem;
+import demo.slash.customplayer.utils.Logger;
 import demo.slash.customplayer.utils.StringUtils;
-import demo.slash.customplayer.view.PlayerActivity;
+import demo.slash.customplayer.view.GlActivity;
+import demo.slash.customplayer.view.MainActivity;
 
 /**
  * Created by Administrator on 2016/12/11 0011.
  */
 
-public class VideoAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
+public class VideoAdapter extends BaseAdapter implements AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     private static final String TAG = "VideoAdapter";
     private final Context mCtx;
@@ -82,9 +84,19 @@ public class VideoAdapter extends BaseAdapter implements AdapterView.OnItemClick
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Log.d(TAG,"on item click");
 
-        Intent intent = new Intent(mCtx, PlayerActivity.class);
+        Intent intent = new Intent(mCtx, GlActivity.class);
         intent.setData(Uri.parse(mList.get(position).getPath()));
         mCtx.startActivity(intent);
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        Logger.D(TAG,"item long click");
+
+        View operateView = ((MainActivity) mCtx).getOperateView();
+        operateView.setVisibility(View.VISIBLE);
+
+        return true;
     }
 
     private static class ViewHolder{
