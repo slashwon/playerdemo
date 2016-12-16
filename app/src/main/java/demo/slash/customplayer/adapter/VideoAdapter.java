@@ -18,10 +18,9 @@ import java.util.List;
 
 import demo.slash.customplayer.R;
 import demo.slash.customplayer.bean.VideoItem;
+import demo.slash.customplayer.utils.CommonUtils;
 import demo.slash.customplayer.utils.Logger;
-import demo.slash.customplayer.utils.StringUtils;
-import demo.slash.customplayer.view.GlActivity;
-import demo.slash.customplayer.view.MainActivity;
+import demo.slash.customplayer.view.PlayerActivity;
 
 /**
  * Created by Administrator on 2016/12/11 0011.
@@ -71,7 +70,7 @@ public class VideoAdapter extends BaseAdapter implements AdapterView.OnItemClick
         }
 
         holder.tvName.setText((getItem(position)).getDisplayName());
-        holder.tvDuration.setText(StringUtils.convertTimeLong(getItem(position).getDuration()));
+        holder.tvDuration.setText(CommonUtils.convertTimeLong(getItem(position).getDuration()));
 
         mGlide.load(getItem(position).getPath())
                 .centerCrop()
@@ -84,7 +83,7 @@ public class VideoAdapter extends BaseAdapter implements AdapterView.OnItemClick
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Log.d(TAG,"on item click");
 
-        Intent intent = new Intent(mCtx, GlActivity.class);
+        Intent intent = new Intent(mCtx, PlayerActivity.class);
         intent.setData(Uri.parse(mList.get(position).getPath()));
         mCtx.startActivity(intent);
     }
@@ -93,8 +92,8 @@ public class VideoAdapter extends BaseAdapter implements AdapterView.OnItemClick
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         Logger.D(TAG,"item long click");
 
-        View operateView = ((MainActivity) mCtx).getOperateView();
-        operateView.setVisibility(View.VISIBLE);
+//        View operateView = ((MainActivity) mCtx).getOperateView();
+//        operateView.setVisibility(View.VISIBLE);
 
         return true;
     }

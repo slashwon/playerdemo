@@ -49,7 +49,12 @@ public class VideoSurfaceView extends SurfaceView implements IjkMediaPlayer.OnPr
 
     public void initPlayer(){
         if(null==mPlayer) {
-            mPlayer = new MediaPlayerWrapper();
+            mPlayer = new MediaPlayerWrapper(new IMediaPlayer.OnVideoSizeChangedListener() {
+                @Override
+                public void onVideoSizeChanged(IMediaPlayer mp, int width, int height, int sar_num, int sar_den) {
+                    Logger.D(MainActivity.TAG,"video size changed: width = "+width+"; height = "+height);
+                }
+            });
         }
     }
 

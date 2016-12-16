@@ -27,6 +27,12 @@
             android:theme="@android:style/Theme.Black"/>
         <activity android:name=".view.GlActivity">
         </activity>
+
+        <service
+            android:name=".service.ObserverService"
+            android:enabled="true"
+            android:exported="true">
+        </service>
     </application>
 
 </manifest>

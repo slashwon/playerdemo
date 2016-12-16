@@ -23,6 +23,10 @@ public class MediaPlayerWrapper implements IMediaPlayer.OnPreparedListener {
         }
     }
 
+    public IjkMediaPlayer getPlayer(){
+        return mPlayer;
+    }
+
     public void setSurface(Surface s){
         mPlayer.setSurface(s);
     }
@@ -33,11 +37,12 @@ public class MediaPlayerWrapper implements IMediaPlayer.OnPreparedListener {
 
     private State mState = State.IDLE;
 
-    public MediaPlayerWrapper(){
+    public MediaPlayerWrapper(IMediaPlayer.OnVideoSizeChangedListener listener){
         if(mPlayer ==null){
             mPlayer = new IjkMediaPlayer();
         }
         mPlayer.setOnPreparedListener(this);
+        mPlayer.setOnVideoSizeChangedListener(listener);
     }
 
     public State getState(){

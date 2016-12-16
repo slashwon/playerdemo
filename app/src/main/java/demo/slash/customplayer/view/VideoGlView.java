@@ -43,7 +43,12 @@ public class VideoGlView extends GLSurfaceView implements GLSurfaceView.Renderer
         GLES20.glEnable(GLES20.GL_CULL_FACE);
         GLES20.glEnable(GLES20.GL_DEPTH_TEST);
 
+        initProgram();
         initTexture();
+
+    }
+
+    private void initProgram() {
 
     }
 
@@ -76,7 +81,7 @@ public class VideoGlView extends GLSurfaceView implements GLSurfaceView.Renderer
 
     public void initPlayer(){
         if(null==mPlayer) {
-            mPlayer = new MediaPlayerWrapper();
+            mPlayer = new MediaPlayerWrapper(null);
         }
     }
 

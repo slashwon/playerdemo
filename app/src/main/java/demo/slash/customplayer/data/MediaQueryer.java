@@ -12,6 +12,8 @@ import java.util.List;
 
 import demo.slash.customplayer.bean.VideoItem;
 import demo.slash.customplayer.data.database.DbOperator;
+import demo.slash.customplayer.utils.CommonUtils;
+import demo.slash.customplayer.utils.Logger;
 import demo.slash.customplayer.view.MainActivity;
 
 public class MediaQueryer {
@@ -33,7 +35,7 @@ public class MediaQueryer {
 
     public List<VideoItem> getVideos(){
         List<VideoItem> l = DbOperator.query();
-        if(null==l){
+        if(null==l || l.size()==0){
             l = eachAll();
         }
         Collections.sort(l, new Comparator<VideoItem>() {
@@ -63,42 +65,31 @@ public class MediaQueryer {
         File root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
         List<VideoItem> videoItems = new ArrayList<>();
         each(videoItems,root);
+        Logger.D(MainActivity.TAG,"list size = "+videoItems.size());
         return videoItems;
     }
 
     private void each(List<VideoItem> list,File root) {
         File[] subFiles = root.listFiles();
-        for (File f :
-                subFiles) {
-            if (f.isDirectory()){
-                each(list,f);
-            } else {
-                String path = f.getAbsolutePath();
-                if(isVideo(path)){
-                    long date = f.lastModified();
-                    long size = f.length();
-                    VideoItem videoItem = new VideoItem(path.substring(path.lastIndexOf("/") + 1), path, date, 0,size);
-
-                    list.add(videoItem);
-                    if(!DbOperator.exist(path)) {
-                        DbOperator.insert(videoItem);
+        if(subFiles!=null) {
+            for (File f :
+                    subFiles) {
+                if (f.isDirectory()) {
+                    each(list, f);
+                } else {
+                    String path = f.getAbsolutePath();
+                    Logger.D(MainActivity.TAG, "path = " + path);
+                    if (CommonUtils.isVideo(path)) {
+                        VideoItem videoItem = CommonUtils.fromPath2Bean(path);
+                        if (videoItem != null) {
+                            list.add(videoItem);
+                            if (!DbOperator.exist(path)) {
+                                DbOperator.insert(videoItem);
+                            }
+                        }
                     }
                 }
             }
         }
     }
-
-    private boolean isVideo(String path) {
-        String ext = path.substring(path.lastIndexOf(".")+1);
-        if(ext.equalsIgnoreCase("mp4") ||
-                ext.equalsIgnoreCase("rm") ||
-                ext.equalsIgnoreCase("avi") ||
-                ext.equalsIgnoreCase("3gp") ||
-                ext.equalsIgnoreCase("rmvb") ||
-                ext.equalsIgnoreCase("mkv")){
-            return true;
-        }
-        return false;
-    }
-
 }

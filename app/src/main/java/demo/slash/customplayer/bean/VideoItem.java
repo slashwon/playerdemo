@@ -1,5 +1,7 @@
 package demo.slash.customplayer.bean;
 
+import android.text.TextUtils;
+
 /**
  * Created by Administrator on 2016/12/10 0010.
  */
@@ -12,6 +14,15 @@ public class VideoItem {
     private long dateAdded;
     private long duration;
     private long size;
+
+    @Override
+    public boolean equals(Object o) {
+        if(o instanceof VideoItem){
+            VideoItem item = (VideoItem)o;
+            return TextUtils.equals(path,item.getPath());
+        }
+        return false;
+    }
 
     @Override
     public String toString() {

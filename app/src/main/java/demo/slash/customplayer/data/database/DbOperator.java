@@ -11,7 +11,7 @@ import java.util.List;
 
 import demo.slash.customplayer.bean.VideoItem;
 import demo.slash.customplayer.utils.Logger;
-import demo.slash.customplayer.utils.StringUtils;
+import demo.slash.customplayer.utils.CommonUtils;
 import demo.slash.customplayer.view.MainActivity;
 
 /**
@@ -26,11 +26,12 @@ public class DbOperator {
     public static void initDatabase(Context ctx){
         sDbHelper = new VideoDbHelper(new SoftReference<>(ctx).get());
         sDatabase = sDbHelper.getWritableDatabase();
+        Logger.D(MainActivity.TAG,"database operator helper");
     }
 
     public static void insert(VideoItem item){
         ContentValues cv = new ContentValues();
-        cv.put(VideoDbHelper.COL_NAME, StringUtils.displayName(item.getPath()));
+        cv.put(VideoDbHelper.COL_NAME, CommonUtils.displayName(item.getPath()));
         cv.put(VideoDbHelper.COL_PATH,item.getPath());
         cv.put(VideoDbHelper.COL_DATE,item.getDateAdded());
         cv.put(VideoDbHelper.COL_DURATION,item.getDuration());
@@ -40,6 +41,10 @@ public class DbOperator {
 
     public static boolean delete(VideoItem item){
         String path = item.getPath();
+        return delete(path);
+    }
+
+    public static boolean delete(String path){
         int delete = sDatabase.delete(VideoDbHelper.DB_NAME, VideoDbHelper.COL_PATH + " = ? ", new String[]{path});
         return delete!=0;
     }
@@ -51,6 +56,7 @@ public class DbOperator {
     }
 
     public static List<VideoItem> query(){
+        Logger.D(MainActivity.TAG,"query from db");
         String sql_query = "select * from "+VideoDbHelper.DB_NAME;
         Cursor cursor = sDatabase.rawQuery(sql_query, null);
         if(cursor==null || cursor.getCount()==0){

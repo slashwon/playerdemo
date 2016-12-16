@@ -4,11 +4,13 @@
     android:id="@+id/activity_player"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+                android:background="#fff"
     tools:context=".view.PlayerActivity">
 
     <demo.slash.customplayer.view.VideoSurfaceView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_centerInParent="true"
         android:id="@+id/videoView"
         />
 
