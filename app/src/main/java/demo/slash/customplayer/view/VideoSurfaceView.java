@@ -23,28 +23,33 @@ public class VideoSurfaceView extends SurfaceView implements IjkMediaPlayer.OnPr
     private SurfaceHolder mSurfaceHolder;
     private String mPath;
     private PlayerActivity mActivity;
+//    private int mWidth;
+//    private int mHeight;
 
     public VideoSurfaceView(Context context) {
         super(context);
-        initVideoView();
+        initVideoView(context);
     }
 
     public MediaPlayerWrapper getPlayer(){
         return mPlayer;
     }
 
-    private void initVideoView() {
+    private void initVideoView(Context context) {
+        mActivity=(PlayerActivity)context;
+//        mWidth = mActivity.getWindowManager().getDefaultDisplay().getWidth();
+//        mHeight = mActivity.getWindowManager().getDefaultDisplay().getHeight();
         getHolder().addCallback(this);
     }
 
     public VideoSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initVideoView();
+        initVideoView(context);
     }
 
     public VideoSurfaceView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initVideoView();
+        initVideoView(context);
     }
 
     public void initPlayer(){
@@ -52,7 +57,12 @@ public class VideoSurfaceView extends SurfaceView implements IjkMediaPlayer.OnPr
             mPlayer = new MediaPlayerWrapper(new IMediaPlayer.OnVideoSizeChangedListener() {
                 @Override
                 public void onVideoSizeChanged(IMediaPlayer mp, int width, int height, int sar_num, int sar_den) {
-                    Logger.D(MainActivity.TAG,"video size changed: width = "+width+"; height = "+height);
+                    Logger.D(MainActivity.TAG,"video size changed: width = "+ width +"; height = "+ height);
+//                    mWidth = width;
+//                    mHeight = height;
+                    // now do nothing
+//                    measure(mWidthMeasureSpec,mHeightMeasureSpec);
+//                    requestLayout();
                 }
             });
         }
@@ -104,6 +114,10 @@ public class VideoSurfaceView extends SurfaceView implements IjkMediaPlayer.OnPr
         updateSeekbar();
     }
 
+    public void release(){
+        mPlayer.release();
+    }
+
     public void fastMove(float d){
         if(mPlayer!=null){
             mPlayer.fastMove(d);
@@ -138,6 +152,12 @@ public class VideoSurfaceView extends SurfaceView implements IjkMediaPlayer.OnPr
         Logger.D(MainActivity.TAG,"holder surface destroyed");
     }
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+//        setMeasuredDimension(mWidth,mHeight);
+    }
+
     private Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -159,7 +179,15 @@ public class VideoSurfaceView extends SurfaceView implements IjkMediaPlayer.OnPr
 
     private static final int MSG_SURFACE_READY=10;
 
-    public void setActivity(PlayerActivity playerActivity) {
-        mActivity = playerActivity;
+    public void adjustLight() {
+        Logger.D(MainActivity.TAG,"adjust light");
     }
+
+    public void adjustVolume() {
+        Logger.D(MainActivity.TAG,"adjust volume");
+    }
+
+//    public void setActivity(PlayerActivity playerActivity) {
+//        mActivity = playerActivity;
+//    }
 }

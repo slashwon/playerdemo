@@ -132,8 +132,6 @@ public class ObserverService extends Service {
         @Override
         public void onEvent(int event, String path) {
             path = mRoot+"/"+path;
-            File changedFile = new File(path);
-
             if(!CommonUtils.isVideo(path)){
                 return;
             }

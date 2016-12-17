@@ -14,6 +14,26 @@ public class VideoItem {
     private long dateAdded;
     private long duration;
     private long size;
+    private long lastPos;
+    private boolean isSelected;
+
+    public VideoItem(String displayName, String path, long dateAdded, long duration, long size, long lastPos, boolean isSelected) {
+        this.displayName = displayName;
+        this.path = path;
+        this.dateAdded = dateAdded;
+        this.duration = duration;
+        this.size = size;
+        this.lastPos = lastPos;
+        this.isSelected = isSelected;
+    }
+
+    public long getLastPos() {
+        return lastPos;
+    }
+
+    public void setLastPos(long lastPos) {
+        this.lastPos = lastPos;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -24,17 +44,6 @@ public class VideoItem {
         return false;
     }
 
-    @Override
-    public String toString() {
-        return "VideoItem{" +
-                "displayName='" + displayName + '\'' +
-                ", path='" + path + '\'' +
-                ", dateAdded=" + dateAdded +
-                ", duration=" + duration +
-                ", size=" + size +
-                '}';
-    }
-
     public long getSize() {
         return size;
     }
@@ -43,13 +52,25 @@ public class VideoItem {
         this.size = size;
     }
 
-    public VideoItem(String displayName, String path, long dateAdded, long duration, long size) {
-        this.displayName = displayName;
-        this.path = path;
-        this.dateAdded = dateAdded;
-        this.duration = duration;
-        this.size = size ;
+    @Override
+    public String toString() {
+        return "VideoItem{" +
+                "displayName='" + displayName + '\'' +
+                ", path='" + path + '\'' +
+                ", dateAdded=" + dateAdded +
+                ", duration=" + duration +
+                ", size=" + size +
+                ", lastPos=" + lastPos +
+                ", isSelected=" + isSelected +
+                '}';
+    }
 
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 
     public String getDisplayName() {

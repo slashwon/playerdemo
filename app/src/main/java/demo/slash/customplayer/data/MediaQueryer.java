@@ -4,11 +4,15 @@ import android.database.Cursor;
 import android.os.Environment;
 import android.util.Log;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import demo.slash.customplayer.bean.VideoItem;
 import demo.slash.customplayer.data.database.DbOperator;
@@ -19,8 +23,12 @@ import demo.slash.customplayer.view.MainActivity;
 public class MediaQueryer {
 
     private static MediaQueryer mQuery;
+    private final ExecutorService mThread;
+    private boolean mIsLoading = false;
 
-    private MediaQueryer(){}
+    private MediaQueryer(){
+        mThread = Executors.newFixedThreadPool(1);
+    }
 
     public static MediaQueryer instance()
     {
@@ -33,18 +41,32 @@ public class MediaQueryer {
         return mQuery;
     }
 
-    public List<VideoItem> getVideos(){
-        List<VideoItem> l = DbOperator.query();
-        if(null==l || l.size()==0){
-            l = eachAll();
+    public void syncLoadVideos(final boolean reload, final List<VideoItem> list,final IOnLoadingDoneListener listener){
+        if(!CommonUtils.checkSdcard()){
+            return;
         }
-        Collections.sort(l, new Comparator<VideoItem>() {
+        if(mIsLoading){
+            return;
+        }
+        mThread.execute(new Runnable() {
             @Override
-            public int compare(VideoItem lhs, VideoItem rhs) {
-                return (int) (lhs.getDateAdded()-rhs.getDateAdded());
+            public void run() {
+                mIsLoading = true;
+                if(reload){
+                    DbOperator.clear();
+                }
+                List<VideoItem> l = DbOperator.query();
+                if(null==l || l.size()==0){
+                    l = eachAll();
+                }
+                list.clear();
+                list.addAll(l);
+                mIsLoading = false;
+                if(null!=listener){
+                    listener.onLoadingDone();
+                }
             }
         });
-        return l;
     }
 
     private String getCursorString(Cursor c, String col){
@@ -91,5 +113,9 @@ public class MediaQueryer {
                 }
             }
         }
+    }
+
+    public interface IOnLoadingDoneListener{
+        void onLoadingDone();
     }
 }

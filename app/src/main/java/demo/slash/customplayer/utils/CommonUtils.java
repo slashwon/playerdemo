@@ -1,5 +1,10 @@
 package demo.slash.customplayer.utils;
 
+import android.os.Environment;
+import android.text.TextUtils;
+
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.File;
 
 import demo.slash.customplayer.bean.VideoItem;
@@ -9,6 +14,8 @@ import demo.slash.customplayer.bean.VideoItem;
  */
 
 public class CommonUtils {
+
+    public static final String SDCARD_UNMOUNTED = "sdcard_unmounted";
 
     public static String convertTimeLong(long time){
         long secTime = time/1000;
@@ -52,8 +59,21 @@ public class CommonUtils {
             long date = f.lastModified();
             long size = f.length();
             String name = displayName(path);
-            return new VideoItem(name,path,date,0,size);
+            return new VideoItem(name,path,date,0,size,0,false);
         }
+        return null;
+    }
+
+    public static boolean checkSdcard(){
+        String state = Environment.getExternalStorageState();
+        if(TextUtils.equals(state,Environment.MEDIA_MOUNTED)){
+            return true;
+        }
+        EventBus.getDefault().post(SDCARD_UNMOUNTED);
+        return false;
+    }
+
+    public static String getExternalStorage(){
         return null;
     }
 

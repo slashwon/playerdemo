@@ -38,11 +38,7 @@ public class MediaPlayerWrapper implements IMediaPlayer.OnPreparedListener {
     private State mState = State.IDLE;
 
     public MediaPlayerWrapper(IMediaPlayer.OnVideoSizeChangedListener listener){
-        if(mPlayer ==null){
-            mPlayer = new IjkMediaPlayer();
-        }
-        mPlayer.setOnPreparedListener(this);
-        mPlayer.setOnVideoSizeChangedListener(listener);
+        init(listener);
     }
 
     public State getState(){
@@ -65,6 +61,14 @@ public class MediaPlayerWrapper implements IMediaPlayer.OnPreparedListener {
         return mPlayer.getDuration();
     }
 
+    public void init(IMediaPlayer.OnVideoSizeChangedListener listener){
+        if(mPlayer ==null){
+            mPlayer = new IjkMediaPlayer();
+        }
+        mPlayer.setOnPreparedListener(this);
+        mPlayer.setOnVideoSizeChangedListener(listener);
+    }
+
     public void start(){
         if(mPlayer!=null && (mState==State.STOP||mState==State.PAUSE||mState==State.PREPARED)){
             mPlayer.start();
@@ -84,6 +88,15 @@ public class MediaPlayerWrapper implements IMediaPlayer.OnPreparedListener {
             mState = State.STOP;
             updateHandler();
         }
+    }
+
+    public void release(){
+        if(mPlayer!=null && mState!=State.IDLE){
+            mPlayer.release();
+            mState = State.IDLE;
+            updateHandler();
+        }
+        mPlayer=null;
     }
 
     public void pause(){

@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="debug"><source path="E:\WORKING_SPACE\customplayer_12_16\ijkplayer-java\build\intermediates\bundles\debug\assets"/></dataSet><dataSet config="main"><source path="E:\WORKING_SPACE\customplayer_12_16\ijkplayer-java\src\androidTest\assets"/><source path="E:\WORKING_SPACE\customplayer_12_16\ijkplayer-java\build\generated\assets\shaders\androidTest\debug"/></dataSet></merger>

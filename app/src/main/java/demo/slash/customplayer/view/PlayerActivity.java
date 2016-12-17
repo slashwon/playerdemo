@@ -10,13 +10,13 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import demo.slash.customplayer.R;
-import demo.slash.customplayer.player.Controller;
+import demo.slash.customplayer.player.GestureController;
 import demo.slash.customplayer.player.MediaPlayerWrapper;
 
 public class PlayerActivity extends Activity {
 
-    private VideoSurfaceView videoView;
-    private GestureDetector mGestureDetector;
+    private VideoSurfaceView mVideoView;
+    private GestureController mGestureDetector;
     private View mControllView;
 
     @Override
@@ -27,17 +27,18 @@ public class PlayerActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_player);
-        videoView = (VideoSurfaceView) findViewById(R.id.videoView);
+        mVideoView = (VideoSurfaceView) findViewById(R.id.videoView);
         mControllView = findViewById(R.id.layout_controll);
 
-        videoView.setActivity(this);
+//        mVideoView.setActivity(this);
 
         initGesture();
 
     }
 
     private void initGesture() {
-        mGestureDetector = new GestureDetector(this, new Controller(this,videoView,mControllView));
+//        mGestureDetector = new GestureDetector(this, new Controller(this,mVideoView,mControllView));
+        mGestureDetector = new GestureController(this, mVideoView,mControllView);
     }
 
     @Override
@@ -50,8 +51,8 @@ public class PlayerActivity extends Activity {
         super.onStart();
         String path = getIntent().getData().toString();
         if(!TextUtils.isEmpty(path)){
-            videoView.initPlayer();
-            videoView.setPath(path);
+            mVideoView.initPlayer();
+            mVideoView.setPath(path);
         }
 
     }
@@ -64,6 +65,19 @@ public class PlayerActivity extends Activity {
     @Override
     protected void onStop() {
         super.onStop();
+        mVideoView.stopVideo();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mVideoView.release();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        mVideoView.stopVideo();
     }
 
     public void updateUIstate(final MediaPlayerWrapper.State state){

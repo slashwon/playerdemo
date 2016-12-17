@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="E:\WORKING_SPACE\customplayer_12_16\ijkplayer-java\src\main\assets"/><source path="E:\WORKING_SPACE\customplayer_12_16\ijkplayer-java\build\generated\assets\shaders\debug"/></dataSet><dataSet config="debug"><source path="E:\WORKING_SPACE\customplayer_12_16\ijkplayer-java\src\debug\assets"/></dataSet></merger>

@@ -18,13 +18,16 @@ public class VideoDbHelper extends SQLiteOpenHelper {
     public static final String COL_DATE = "date";
     public static final String COL_SIZE = "size";
     public static final String COL_DURATION = "duration";
+    public static final String COL_LAST_POS = "last_position";
 
-    private static final String SQL_CREATE = "create table "+DB_NAME+" ( "+COL_ID+" int auto increment unique, "+
+    private static final String SQL_CREATE = "create table "+DB_NAME+" ( "
+            +COL_ID+" int auto increment unique, "+
             COL_NAME+" varchar(100) ,"+
             COL_PATH+" varchar(200), " +
             COL_DATE+" long," +
             COL_SIZE+" long," +
-            COL_DURATION+" long )";
+            COL_DURATION+" long, " +
+            COL_LAST_POS+" long)";
 
     public VideoDbHelper(Context ctx){
         super(ctx,DB_NAME,null,DB_VERSION);

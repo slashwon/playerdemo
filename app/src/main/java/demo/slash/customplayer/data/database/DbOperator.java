@@ -36,6 +36,7 @@ public class DbOperator {
         cv.put(VideoDbHelper.COL_DATE,item.getDateAdded());
         cv.put(VideoDbHelper.COL_DURATION,item.getDuration());
         cv.put(VideoDbHelper.COL_SIZE,item.getSize());
+        cv.put(VideoDbHelper.COL_LAST_POS,item.getLastPos());
         sDatabase.insertWithOnConflict(VideoDbHelper.DB_NAME,null,cv,SQLiteDatabase.CONFLICT_IGNORE);
     }
 
@@ -57,7 +58,7 @@ public class DbOperator {
 
     public static List<VideoItem> query(){
         Logger.D(MainActivity.TAG,"query from db");
-        String sql_query = "select * from "+VideoDbHelper.DB_NAME;
+        String sql_query = "select * from "+VideoDbHelper.DB_NAME + " order by "+VideoDbHelper.COL_DATE;
         Cursor cursor = sDatabase.rawQuery(sql_query, null);
         if(cursor==null || cursor.getCount()==0){
             return null;
@@ -69,7 +70,8 @@ public class DbOperator {
             long date = cursor.getLong(cursor.getColumnIndex(VideoDbHelper.COL_DATE));
             long size = cursor.getLong(cursor.getColumnIndex(VideoDbHelper.COL_SIZE));
             long duration = cursor.getLong(cursor.getColumnIndex(VideoDbHelper.COL_DURATION));
-            VideoItem item = new VideoItem(name, path, date, duration, size);
+            long lastPos = cursor.getLong(cursor.getColumnIndex(VideoDbHelper.COL_LAST_POS));
+            VideoItem item = new VideoItem(name, path, date, duration, size,lastPos,false);
             list.add(item);
         }
         cursor.close();
