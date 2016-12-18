@@ -6,8 +6,12 @@ import android.text.TextUtils;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
+import java.util.Iterator;
+import java.util.List;
 
 import demo.slash.customplayer.bean.VideoItem;
+import demo.slash.customplayer.data.database.DbOperator;
+import demo.slash.customplayer.view.MainActivity;
 
 /**
  * Created by Administrator on 2016/12/11 0011.
@@ -77,4 +81,24 @@ public class CommonUtils {
         return null;
     }
 
+    public static void deleteFiles(List<VideoItem> videoList) {
+        if(videoList==null || videoList.isEmpty()){
+            return;
+        }
+        Iterator<VideoItem> iterator = videoList.iterator();
+        while (iterator.hasNext()){
+            VideoItem next = iterator.next();
+            if(next.isSelected()){
+                String path = next.getPath();
+                File file = new File(path);
+                if(file.exists()){
+                    boolean delete = file.delete();
+                    Logger.D(MainActivity.TAG,"file delete local ? "+delete);
+                }
+                boolean d = DbOperator.delete(path);
+                Logger.D(MainActivity.TAG,"delete from database ? "+d);
+                iterator.remove();
+            }
+        }
+    }
 }

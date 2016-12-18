@@ -1645,6 +1645,7 @@ containing a value of this type.
         public static final int buttonPanel=0x7f0c002b;
         public static final int cancel_action=0x7f0c0062;
         public static final int cb_item=0x7f0c0071;
+        public static final int cb_main_header_all=0x7f0c005d;
         public static final int checkbox=0x7f0c0039;
         public static final int chronometer=0x7f0c0068;
         public static final int collapseActionView=0x7f0c001d;
@@ -1665,7 +1666,6 @@ containing a value of this type.
         public static final int ib_controll_next=0x7f0c0058;
         public static final int ib_controll_play_stop=0x7f0c0057;
         public static final int ib_controll_pre=0x7f0c0056;
-        public static final int ib_main_header_all=0x7f0c005d;
         public static final int ib_main_header_del=0x7f0c005e;
         public static final int ib_main_refresh=0x7f0c005b;
         public static final int icon=0x7f0c0029;
@@ -1790,6 +1790,10 @@ containing a value of this type.
     }
     public static final class mipmap {
         public static final int ic_launcher=0x7f030000;
+        public static final int icon_change=0x7f030001;
+        public static final int player_ads_detail_failed=0x7f030002;
+        public static final int pp_search_delete_normal=0x7f030003;
+        public static final int qimo_green_image_background=0x7f030004;
     }
     public static final class string {
         public static final int abc_action_bar_home_description=0x7f060000;

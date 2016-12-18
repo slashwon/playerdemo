@@ -482,6 +482,7 @@ int id btn_operate_delete 0x7f0c0060
 int id buttonPanel 0x7f0c002b
 int id cancel_action 0x7f0c0062
 int id cb_item 0x7f0c0071
+int id cb_main_header_all 0x7f0c005d
 int id checkbox 0x7f0c0039
 int id chronometer 0x7f0c0068
 int id collapseActionView 0x7f0c001d
@@ -502,7 +503,6 @@ int id homeAsUp 0x7f0c000d
 int id ib_controll_next 0x7f0c0058
 int id ib_controll_play_stop 0x7f0c0057
 int id ib_controll_pre 0x7f0c0056
-int id ib_main_header_all 0x7f0c005d
 int id ib_main_header_del 0x7f0c005e
 int id ib_main_refresh 0x7f0c005b
 int id icon 0x7f0c0029
@@ -621,6 +621,10 @@ int layout select_dialog_singlechoice_material 0x7f040029
 int layout support_simple_spinner_dropdown_item 0x7f04002a
 int layout video_item_layout 0x7f04002b
 int mipmap ic_launcher 0x7f030000
+int mipmap icon_change 0x7f030001
+int mipmap player_ads_detail_failed 0x7f030002
+int mipmap pp_search_delete_normal 0x7f030003
+int mipmap qimo_green_image_background 0x7f030004
 int string abc_action_bar_home_description 0x7f060000
 int string abc_action_bar_home_description_format 0x7f060001
 int string abc_action_bar_home_subtitle_description_format 0x7f060002

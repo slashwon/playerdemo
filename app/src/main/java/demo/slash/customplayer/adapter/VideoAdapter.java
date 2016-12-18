@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -61,7 +62,7 @@ public class VideoAdapter extends BaseAdapter implements AdapterView.OnItemClick
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
+        final ViewHolder holder;
         if(null==convertView){
             holder = new ViewHolder();
             convertView = View.inflate(mCtx, R.layout.video_item_layout,null);
@@ -75,16 +76,23 @@ public class VideoAdapter extends BaseAdapter implements AdapterView.OnItemClick
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.tvName.setText((getItem(position)).getDisplayName());
-        holder.tvDuration.setText(CommonUtils.convertTimeLong(getItem(position).getDuration()));
+        final VideoItem item = getItem(position);
 
-        if(mShowCB) {
-            holder.cbSelect.setVisibility(View.VISIBLE);
-            holder.cbSelect.setChecked(getItem(position).isSelected());
-        }
+        holder.tvName.setText(item.getDisplayName());
+        holder.tvDuration.setText(CommonUtils.convertTimeLong(item.getDuration()));
+        holder.cbSelect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                item.setSelected(holder.cbSelect.isChecked());
+            }
+        });
 
-        mGlide.load(getItem(position).getPath())
+        holder.cbSelect.setVisibility(mShowCB ? View.VISIBLE : View.GONE);
+        holder.cbSelect.setChecked(item.isSelected());
+
+        mGlide.load(item.getPath())
                 .centerCrop()
+                .error(R.mipmap.player_ads_detail_failed)
                 .into(holder.ivIcon);
 
         return convertView;
@@ -102,8 +110,7 @@ public class VideoAdapter extends BaseAdapter implements AdapterView.OnItemClick
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         Logger.D(TAG,"item long click");
-        mShowCB = true;
-        notifyDataSetChanged();
+        updateCheckState(true);
         EventBus.getDefault().post(EB_MSG_UPDATE_HEADER);
         return true;
     }
@@ -113,6 +120,11 @@ public class VideoAdapter extends BaseAdapter implements AdapterView.OnItemClick
         public TextView tvName;
         public TextView tvDuration;
         public CheckBox cbSelect;
+    }
+
+    public void updateCheckState(boolean ck){
+        mShowCB = ck;
+        notifyDataSetChanged();
     }
 
 }

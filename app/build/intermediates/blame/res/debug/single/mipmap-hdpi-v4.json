@@ -1,5 +1,21 @@
 [
     {
+        "merged": "E:\\WORKING_SPACE\\customplayer_12_16\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-hdpi-v4\\qimo_green_image_background.png",
+        "source": "E:\\WORKING_SPACE\\customplayer_12_16\\app\\src\\main\\res\\mipmap-hdpi\\qimo_green_image_background.png"
+    },
+    {
+        "merged": "E:\\WORKING_SPACE\\customplayer_12_16\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-hdpi-v4\\pp_search_delete_normal.png",
+        "source": "E:\\WORKING_SPACE\\customplayer_12_16\\app\\src\\main\\res\\mipmap-hdpi\\pp_search_delete_normal.png"
+    },
+    {
+        "merged": "E:\\WORKING_SPACE\\customplayer_12_16\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-hdpi-v4\\player_ads_detail_failed.png",
+        "source": "E:\\WORKING_SPACE\\customplayer_12_16\\app\\src\\main\\res\\mipmap-hdpi\\player_ads_detail_failed.png"
+    },
+    {
+        "merged": "E:\\WORKING_SPACE\\customplayer_12_16\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-hdpi-v4\\icon_change.png",
+        "source": "E:\\WORKING_SPACE\\customplayer_12_16\\app\\src\\main\\res\\mipmap-hdpi\\icon_change.png"
+    },
+    {
         "merged": "E:\\WORKING_SPACE\\customplayer_12_16\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-hdpi-v4\\ic_launcher.png",
         "source": "E:\\WORKING_SPACE\\customplayer_12_16\\app\\src\\main\\res\\mipmap-hdpi\\ic_launcher.png"
     }

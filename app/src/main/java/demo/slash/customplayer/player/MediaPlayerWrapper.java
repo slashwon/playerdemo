@@ -127,5 +127,6 @@ public class MediaPlayerWrapper implements IMediaPlayer.OnPreparedListener {
     public void fastRateMove(float rate){
         long duration = mPlayer.getDuration();
         mPlayer.seekTo((long) (duration*rate));
+        Logger.D(MainActivity.TAG,"seek to = "+duration*rate);
     }
 }

@@ -12,6 +12,8 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -20,10 +22,12 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import demo.slash.customplayer.R;
 import demo.slash.customplayer.adapter.VideoAdapter;
+import demo.slash.customplayer.bean.EBEvent;
 import demo.slash.customplayer.bean.ObserverEvent;
 import demo.slash.customplayer.bean.VideoItem;
 import demo.slash.customplayer.data.MediaQueryer;
@@ -32,7 +36,7 @@ import demo.slash.customplayer.service.ObserverService;
 import demo.slash.customplayer.utils.CommonUtils;
 import demo.slash.customplayer.utils.Logger;
 
-public class MainActivity extends Activity  {
+public class MainActivity extends Activity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     public static final String TAG = "VideoPlayer";
     private static final int MSG_QUERY_START = 10;
@@ -70,6 +74,7 @@ public class MainActivity extends Activity  {
     };
     private View mRLbrand;
     private View mRLoperate;
+    private CheckBox mCBAll;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +118,9 @@ public class MainActivity extends Activity  {
     private void findViews() {
         mRLbrand = findViewById(R.id.rl_main_brand);
         mRLoperate = findViewById(R.id.rl_main_operate);
-
+        findViewById(R.id.ib_main_header_del).setOnClickListener(this);
+        mCBAll = (CheckBox) findViewById(R.id.cb_main_header_all);
+        mCBAll.setOnCheckedChangeListener(this);
         mLvVideos = (ListView) findViewById(R.id.lv_list);
         mAdapter = new VideoAdapter(MainActivity.this, videoList);
         mLvVideos.setAdapter(mAdapter);
@@ -122,13 +129,7 @@ public class MainActivity extends Activity  {
 
         mPbLoading = findViewById(R.id.pb_loading);
 
-        findViewById(R.id.ib_main_refresh).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mHandler.sendEmptyMessage(MSG_QUERY_START);
-                MediaQueryer.instance().syncLoadVideos(true,videoList,mLoadedListener);
-            }
-        });
+        findViewById(R.id.ib_main_refresh).setOnClickListener(this);
 
         updateHeaderView(mRLoperate);
     }
@@ -160,11 +161,24 @@ public class MainActivity extends Activity  {
                 mHandler.sendEmptyMessage(MSG_QUERY_END);
             }
         }
+        if(event instanceof EBEvent.MainEvent){
+            Logger.D(TAG,"receive main event");
+            if(TextUtils.equals(((EBEvent.MainEvent) event).event, EBEvent.MainEvent.EVENT_MAIN_DEL_DONE)){
+                mAdapter.updateCheckState(false);
+                updateHeaderView(mRLbrand,mRLoperate);
+            }
+            if(TextUtils.equals(((EBEvent.MainEvent) event).event, EBEvent.MainEvent.EVENT_MAIN_DEL_START)){
+                EventBus.getDefault().post(new EBEvent.BackgroundEvent(EBEvent.BackgroundEvent.EVENT_SYNC_DEL));
+            }
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void onEventBACKGROUND(){
-
+    public void onEventBACKGROUND(EBEvent.BackgroundEvent event){
+        if(TextUtils.equals(event.event, EBEvent.BackgroundEvent.EVENT_SYNC_DEL)){
+            CommonUtils.deleteFiles(videoList);
+            EventBus.getDefault().post(new EBEvent.MainEvent(EBEvent.MainEvent.EVENT_MAIN_DEL_DONE));
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
@@ -179,6 +193,7 @@ public class MainActivity extends Activity  {
 //                break;
 //        }
 //        mHandler.sendEmptyMessage(MSG_QUERY_END);
+
     }
 
     @Subscribe(threadMode = ThreadMode.POSTING)
@@ -207,6 +222,32 @@ public class MainActivity extends Activity  {
             super.onBackPressed();
         } else {
             updateHeaderView(mRLbrand,mRLoperate);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v.getId()==R.id.ib_main_header_del){
+            EventBus.getDefault().post(new EBEvent.MainEvent(EBEvent.MainEvent.EVENT_MAIN_DEL_START));
+        }
+        if(v.getId() == R.id.ib_main_refresh){
+            mHandler.sendEmptyMessage(MSG_QUERY_START);
+            MediaQueryer.instance().syncLoadVideos(true,videoList,mLoadedListener);
+        }
+    }
+
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if(buttonView.getId()==R.id.cb_main_header_all){
+            Iterator<VideoItem> iterator = videoList.iterator();
+            while(iterator.hasNext()){
+                VideoItem next = iterator.next();
+                next.setSelected(mCBAll.isChecked());
+                Logger.D(TAG,"item checked ? "+next.isSelected());
+            }
+            mAdapter.updateCheckState(mCBAll.isChecked());
+            mAdapter.notifyDataSetChanged();
         }
     }
 }

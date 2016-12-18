@@ -32,8 +32,8 @@ public class GestureController extends GestureDetector {
         private final VideoSurfaceView mVideoView;
         private final View mControllView;
 
-        private static final float LIMIT_MOVE_X = 0;
-        private static final float LIMIT_MOVE_Y= 50;
+        private static final float LIMIT_MOVE_X = 300;
+        private static final float LIMIT_MOVE_Y= 300;
         private final Context mContext;
         private final int mScreenW;
         private final int mScreenH;
@@ -68,8 +68,12 @@ public class GestureController extends GestureDetector {
 
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
-            int visibility = mControllView.getVisibility();
-            mControllView.setVisibility((visibility==View.VISIBLE) ? View.GONE : View.VISIBLE);
+            boolean visible = mControllView.getVisibility() == View.VISIBLE;
+            mControllView.setVisibility(visible ? View.GONE : View.VISIBLE);
+            if(!visible){
+//                updateSeekbarProgress(0);
+            }
+
             return true;
         }
 
@@ -129,8 +133,8 @@ public class GestureController extends GestureDetector {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             int sbWidth = seekBar.getMax();
-            Logger.D(MainActivity.TAG,"seek bar width = "+sbWidth);
             float rate = (float) progress/sbWidth;
+            Logger.D(MainActivity.TAG,"rate = "+rate);
             mVideoView.fastRateMove(rate);
         }
 
@@ -144,7 +148,12 @@ public class GestureController extends GestureDetector {
         }
 
         public void updateSeekbarProgress(int progress){
-            mSeekBar.setProgress(progress);
+            long total = mVideoView.getPlayer().getDuration();
+            long currPos = mVideoView.getPlayer().getPlayer().getCurrentPosition();
+            Logger.D(MainActivity.TAG,"total = "+total+";curr = "+currPos);
+            long l = currPos * mSeekBar.getMax() / total;
+            Logger.D(MainActivity.TAG,"progress = "+l);
+            mSeekBar.setProgress((int) (currPos*100/total));
         }
 
     }
