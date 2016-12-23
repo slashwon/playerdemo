@@ -1,5 +1,5 @@
-/.idea
-/build
-/app/build/*
-*/build
+.idea/
+build/
+app/build/
+local.properties
 
