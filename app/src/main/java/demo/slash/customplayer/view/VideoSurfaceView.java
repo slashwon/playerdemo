@@ -129,6 +129,7 @@ public class VideoSurfaceView extends SurfaceView implements IjkMediaPlayer.OnPr
 
     public void startVideo(){
         mPlayer.start();
+        mSeekBar.startTracking();
         updateSeekbar();
     }
 

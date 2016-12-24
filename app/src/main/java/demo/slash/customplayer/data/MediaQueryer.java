@@ -1,7 +1,9 @@
 package demo.slash.customplayer.data;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
@@ -41,7 +43,7 @@ public class MediaQueryer {
         return mQuery;
     }
 
-    public void syncLoadVideos(final boolean reload, final List<VideoItem> list,final IOnLoadingDoneListener listener){
+    public void syncLoadVideos(final Context c,final boolean reload, final List<VideoItem> list, final IOnLoadingDoneListener listener){
         if(!CommonUtils.checkSdcard()){
             return;
         }
@@ -57,7 +59,7 @@ public class MediaQueryer {
                 }
                 List<VideoItem> l = DbOperator.query();
                 if(null==l || l.size()==0){
-                    l = eachAll();
+                    l = eachAll(c);
                 }
                 list.clear();
                 list.addAll(l);
@@ -83,9 +85,14 @@ public class MediaQueryer {
         return null;
     }
 
-    public List<VideoItem> eachAll(){
-        File root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
+    public List<VideoItem> eachAll(Context context){
         List<VideoItem> videoItems = new ArrayList<>();
+        String externalStorage = CommonUtils.getExternalStorage(context);
+        if(!TextUtils.isEmpty(externalStorage)){
+            File externRoot = new File(externalStorage);
+            each(videoItems,externRoot);
+        }
+        File root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
         each(videoItems,root);
         Logger.D(MainActivity.TAG,"list size = "+videoItems.size());
         return videoItems;

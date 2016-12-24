@@ -1,11 +1,16 @@
 package demo.slash.customplayer.utils;
 
+import android.content.Context;
 import android.os.Environment;
+import android.os.storage.StorageManager;
 import android.text.TextUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
+import java.lang.ref.SoftReference;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.List;
 
@@ -36,6 +41,25 @@ public class CommonUtils {
                 return "0:"+min%MIN_HOU+":"+sec;
             } else {
                 return hou+":"+min%MIN_HOU+":"+sec;
+            }
+        }
+    }
+
+    public static String convertSize(long size){
+        int b = 1024;
+        if(size < b){
+            return size + "B";
+        } else {
+            int k = (int) (size / b);
+            if(k<b){
+                return (float)Math.round((float)size/b*100)/100 + "KB";
+            } else {
+                int m = k / b;
+                if(m<b){
+                    return (float)Math.round((float)k/b*100)/100 + "MB";
+                } else {
+                    return (float)Math.round((float)m/b*100)/100 + "GB";
+                }
             }
         }
     }
@@ -77,7 +101,27 @@ public class CommonUtils {
         return false;
     }
 
-    public static String getExternalStorage(){
+    public static String getExternalStorage(Context context){
+        Context c = new SoftReference<>(context).get();
+        StorageManager storageManager = (StorageManager) c.getSystemService(Context.STORAGE_SERVICE);
+        try {
+            Method method = storageManager.getClass().getMethod("getVolumePaths");
+            String[] paths = (String[]) method.invoke(storageManager);
+            if(paths!=null){
+                for (String s :
+                        paths) {
+                    if (!TextUtils.equals(s, Environment.getExternalStorageDirectory().getAbsolutePath())){
+                        return s;
+                    }
+                }
+            }
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 

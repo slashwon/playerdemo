@@ -79,7 +79,7 @@ public class VideoAdapter extends BaseAdapter implements AdapterView.OnItemClick
         final VideoItem item = getItem(position);
 
         holder.tvName.setText(item.getDisplayName());
-        holder.tvDuration.setText(CommonUtils.convertTimeLong(item.getDuration()));
+        holder.tvDuration.setText(CommonUtils.convertSize(item.getSize()));
         holder.cbSelect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

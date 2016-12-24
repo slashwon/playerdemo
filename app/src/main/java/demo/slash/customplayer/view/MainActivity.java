@@ -91,7 +91,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Comp
         serviceStart();
 
         mHandler.sendEmptyMessage(MSG_QUERY_START);
-        MediaQueryer.instance().syncLoadVideos(false,videoList,mLoadedListener);
+        MediaQueryer.instance().syncLoadVideos(this,false,videoList,mLoadedListener);
     }
 
 
@@ -232,7 +232,7 @@ public class MainActivity extends Activity implements View.OnClickListener, Comp
         }
         if(v.getId() == R.id.ib_main_refresh){
             mHandler.sendEmptyMessage(MSG_QUERY_START);
-            MediaQueryer.instance().syncLoadVideos(true,videoList,mLoadedListener);
+            MediaQueryer.instance().syncLoadVideos(this,true,videoList,mLoadedListener);
         }
     }
 

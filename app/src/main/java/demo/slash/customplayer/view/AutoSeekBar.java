@@ -6,6 +6,9 @@ import android.os.Message;
 import android.util.AttributeSet;
 import android.widget.SeekBar;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import demo.slash.customplayer.utils.Logger;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
@@ -18,6 +21,7 @@ public class AutoSeekBar extends SeekBar {
     private IMediaPlayer mPlayer;
     private long mCurrPosition  = 0;
     private long mDuration = 1;
+    private ExecutorService mExecutors;
 
     public AutoSeekBar(Context context) {
         this(context,null);
@@ -33,7 +37,7 @@ public class AutoSeekBar extends SeekBar {
     }
 
     private void init() {
-
+        mExecutors = Executors.newFixedThreadPool(1);
     }
 
     public void bindPlayer(IMediaPlayer player){
@@ -42,7 +46,7 @@ public class AutoSeekBar extends SeekBar {
 
     public void startTracking(){
         if(null!=mPlayer){
-            new Thread(new Runnable() {
+            mExecutors.execute(new Runnable() {
                 @Override
                 public void run() {
                     while(mPlayer.isPlaying()){
@@ -53,14 +57,9 @@ public class AutoSeekBar extends SeekBar {
                         Message msg = handler.obtainMessage();
                         msg.arg1 = progress;
                         handler.sendMessage(msg);
-                        try {
-                            Thread.sleep(100);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
                     }
                 }
-            }).start();
+            });
         }
     }
 
