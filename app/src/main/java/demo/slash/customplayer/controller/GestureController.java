@@ -1,15 +1,18 @@
-package demo.slash.customplayer.player;
+package demo.slash.customplayer.controller;
 
 import android.content.Context;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.view.Display;
+import android.view.DragEvent;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.SeekBar;
 
 import demo.slash.customplayer.R;
+import demo.slash.customplayer.player.MediaPlayerWrapper;
 import demo.slash.customplayer.utils.Logger;
+import demo.slash.customplayer.view.AutoSeekBar;
 import demo.slash.customplayer.view.MainActivity;
 import demo.slash.customplayer.view.PlayerActivity;
 import demo.slash.customplayer.view.VideoSurfaceView;
@@ -28,16 +31,16 @@ public class GestureController extends GestureDetector {
         this(context,new Controller(context,vsv,cv));
     }
 
-    public static class Controller implements OnGestureListener,View.OnClickListener,SeekBar.OnSeekBarChangeListener{
+    public static class Controller implements OnGestureListener,View.OnClickListener,SeekBar.OnSeekBarChangeListener {
         private final VideoSurfaceView mVideoView;
         private final View mControllView;
 
         private static final float LIMIT_MOVE_X = 300;
-        private static final float LIMIT_MOVE_Y= 300;
+        private static final float LIMIT_MOVE_Y= 0;
         private final Context mContext;
         private final int mScreenW;
         private final int mScreenH;
-        private AppCompatSeekBar mSeekBar;
+        private AutoSeekBar mSeekBar;
 
         public Controller(Context context,VideoSurfaceView view, View controll){
             mContext = context;
@@ -52,8 +55,9 @@ public class GestureController extends GestureDetector {
 
         private void initComponent(View view) {
             view.findViewById(R.id.ib_controll_play_stop).setOnClickListener(this);
-            mSeekBar = (AppCompatSeekBar) view.findViewById(R.id.controll_seek);
+            mSeekBar = (AutoSeekBar) view.findViewById(R.id.controll_seek);
             mSeekBar.setOnSeekBarChangeListener(this);
+            mVideoView.bindSeekBar(mSeekBar);
         }
 
         @Override
@@ -86,9 +90,9 @@ public class GestureController extends GestureDetector {
                 return true;
             } else if(Math.abs(dy)>=LIMIT_MOVE_Y && Math.abs(dx)<Math.abs(dy)){
                 if(e1.getX()<mScreenW/2 && e2.getX()<mScreenW/2) {
-                    mVideoView.adjustLight();
-                } else if(e1.getX()>mScreenW && e2.getY()>mScreenW/2){
-                    mVideoView.adjustVolume();
+                    mVideoView.adjustLight(dy,mScreenH);
+                } else if(e1.getX()>mScreenW && e2.getX()>mScreenW/2){
+                    mVideoView.adjustVolume(dy,mScreenH);
                 }
                 return true;
             }
@@ -132,10 +136,13 @@ public class GestureController extends GestureDetector {
 
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            int sbWidth = seekBar.getMax();
-            float rate = (float) progress/sbWidth;
-            Logger.D(MainActivity.TAG,"rate = "+rate);
-            mVideoView.fastRateMove(rate);
+            boolean dragged = (boolean) seekBar.getTag();
+            if(dragged) {
+                int sbWidth = seekBar.getMax();
+                float rate = (float) progress / sbWidth;
+                Logger.D(MainActivity.TAG, "rate = " + rate);
+                mVideoView.fastRateMove(rate);
+            }
         }
 
         @Override

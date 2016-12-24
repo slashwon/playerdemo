@@ -3,14 +3,13 @@ package demo.slash.customplayer.view;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
 import demo.slash.customplayer.R;
-import demo.slash.customplayer.player.GestureController;
+import demo.slash.customplayer.controller.GestureController;
 import demo.slash.customplayer.player.MediaPlayerWrapper;
 
 public class PlayerActivity extends Activity {
@@ -80,6 +79,4 @@ public class PlayerActivity extends Activity {
         mVideoView.stopVideo();
     }
 
-    public void updateUIstate(final MediaPlayerWrapper.State state){
-    }
 }

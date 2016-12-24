@@ -5,6 +5,7 @@ import android.view.SurfaceHolder;
 
 import java.io.IOException;
 
+import demo.slash.customplayer.listener.PlayerListener;
 import demo.slash.customplayer.utils.Logger;
 import demo.slash.customplayer.view.MainActivity;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
@@ -13,7 +14,7 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 /**
  * Created by PICO-USER on 2016/12/12.
  */
-public class MediaPlayerWrapper implements IMediaPlayer.OnPreparedListener {
+public class MediaPlayerWrapper{
 
     private IjkMediaPlayer mPlayer;
 
@@ -37,12 +38,16 @@ public class MediaPlayerWrapper implements IMediaPlayer.OnPreparedListener {
 
     private State mState = State.IDLE;
 
-    public MediaPlayerWrapper(IMediaPlayer.OnVideoSizeChangedListener listener){
+    public MediaPlayerWrapper(PlayerListener listener){
         init(listener);
     }
 
     public State getState(){
         return mState;
+    }
+
+    public void setState(State mState) {
+        this.mState = mState;
     }
 
     public void openFile(String path){
@@ -61,12 +66,14 @@ public class MediaPlayerWrapper implements IMediaPlayer.OnPreparedListener {
         return mPlayer.getDuration();
     }
 
-    public void init(IMediaPlayer.OnVideoSizeChangedListener listener){
+    public void init(PlayerListener listener){
+        Logger.D(MainActivity.TAG,"listener == null ? "+(listener==null));
         if(mPlayer ==null){
             mPlayer = new IjkMediaPlayer();
         }
-        mPlayer.setOnPreparedListener(this);
-        mPlayer.setOnVideoSizeChangedListener(listener);
+        mPlayer.setOnPreparedListener(listener.mOnPreparedListener);
+        mPlayer.setOnVideoSizeChangedListener(listener.mVideoSizeChangedListener);
+        mPlayer.setOnCompletionListener(listener.mOnCompletionListener);
     }
 
     public void start(){
@@ -105,12 +112,6 @@ public class MediaPlayerWrapper implements IMediaPlayer.OnPreparedListener {
             mState = State.PAUSE;
             updateHandler();
         }
-    }
-
-    @Override
-    public void onPrepared(IMediaPlayer mp) {
-        mState = State.PREPARED;
-        start();
     }
 
     public void fastMove(float d){

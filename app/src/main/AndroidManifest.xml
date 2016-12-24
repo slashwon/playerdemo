@@ -15,13 +15,16 @@
         <activity
             android:name=".view.MainActivity"
             android:theme="@android:style/Theme.Holo.Light">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".view.PlayerActivity"
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Black" />
-        <activity android:name=".view.GlActivity"></activity>
 
         <service
             android:name=".service.ObserverService"
@@ -29,11 +32,7 @@
             android:exported="true"></service>
 
         <activity android:name=".view.OnLineActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 
