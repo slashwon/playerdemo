@@ -9,8 +9,9 @@ import android.widget.SeekBar;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import demo.slash.customplayer.utils.Logger;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
+
+
 
 /**
  * Created by whs on 16-12-24.

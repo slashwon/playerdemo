@@ -30,9 +30,7 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:23.2.1'
     testCompile 'junit:junit:4.12'
-    //    compile 'com.mcxiaoke.ijk.media:ijkplayer-armv7a:0.6.2'
-    compile project(':ijkplayer-armv7a')
-    compile project(':ijkplayer-java')
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'org.greenrobot:eventbus:3.0.0'
+    //compile files('libs/ijkplayer.jar')
 }
