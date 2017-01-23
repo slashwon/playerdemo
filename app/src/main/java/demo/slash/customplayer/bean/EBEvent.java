@@ -26,10 +26,10 @@ public interface EBEvent {
     }
 
     public class AsyncEvent{
-
+        // do nothing for now
     }
 
     public class PostingEvent{
-
+        // do nothing for now
     }
 }

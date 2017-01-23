@@ -10,7 +10,6 @@ import android.view.WindowManager;
 
 import demo.slash.customplayer.R;
 import demo.slash.customplayer.controller.GestureController;
-import demo.slash.customplayer.player.MediaPlayerWrapper;
 
 public class PlayerActivity extends Activity {
 
@@ -51,7 +50,15 @@ public class PlayerActivity extends Activity {
         String path = getIntent().getData().toString();
         if(!TextUtils.isEmpty(path)){
             mVideoView.initPlayer();
-            mVideoView.setPath(path);
+//            mVideoView.setPath(path);
+
+            // rtmp support
+//            mVideoView.setPath("rtmp://live.hkstv.hk.lxdns.com/live/hks");
+
+            // http
+//            mVideoView.setPath("http://live.hkstv.hk.lxdns.com/live/hks/playlist.m3u8");
+            // rtsp
+            mVideoView.setPath("rtsp://116.199.127.68/huayu");
         }
 
     }

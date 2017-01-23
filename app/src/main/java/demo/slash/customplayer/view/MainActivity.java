@@ -130,7 +130,6 @@ public class MainActivity extends Activity implements View.OnClickListener, Comp
         mPbLoading = findViewById(R.id.pb_loading);
 
         findViewById(R.id.ib_main_refresh).setOnClickListener(this);
-
         updateHeaderView(mRLoperate);
     }
 
@@ -152,24 +151,34 @@ public class MainActivity extends Activity implements View.OnClickListener, Comp
         Logger.D(TAG,"onEventMAIN");
 
         if(event instanceof String){
-            if(TextUtils.equals(VideoAdapter.EB_MSG_UPDATE_HEADER,(String)event)){
-                Logger.D(TAG,"receive eb event: "+event);
-                updateHeaderView(mRLoperate,mRLbrand);
-            }
-            if(TextUtils.equals(CommonUtils.SDCARD_UNMOUNTED,(String)event)){
-                Toast.makeText(this,"未检测到SD卡!",Toast.LENGTH_LONG).show();
-                mHandler.sendEmptyMessage(MSG_QUERY_END);
+            switch ((String)event){
+                case VideoAdapter.EB_MSG_UPDATE_HEADER:
+                    Logger.D(TAG,"receive eb event: "+event);
+                    updateHeaderView(mRLoperate,mRLbrand);
+                    break;
+                case CommonUtils.SDCARD_UNMOUNTED:
+                    Toast.makeText(this,"未检测到SD卡!",Toast.LENGTH_LONG).show();
+                    mHandler.sendEmptyMessage(MSG_QUERY_END);
+                    break;
+                default:
+                    // do nothing
+                    break;
             }
         }
         if(event instanceof EBEvent.MainEvent){
+            switch (((EBEvent.MainEvent) event).event){
+                case EBEvent.MainEvent.EVENT_MAIN_DEL_DONE:
+                    mAdapter.updateCheckState(false);
+                    updateHeaderView(mRLbrand,mRLoperate);
+                    break;
+                case EBEvent.MainEvent.EVENT_MAIN_DEL_START:
+                    EventBus.getDefault().post(new EBEvent.BackgroundEvent(EBEvent.BackgroundEvent.EVENT_SYNC_DEL));
+                    break;
+                default:
+                    // do nothing
+                    break;
+            }
             Logger.D(TAG,"receive main event");
-            if(TextUtils.equals(((EBEvent.MainEvent) event).event, EBEvent.MainEvent.EVENT_MAIN_DEL_DONE)){
-                mAdapter.updateCheckState(false);
-                updateHeaderView(mRLbrand,mRLoperate);
-            }
-            if(TextUtils.equals(((EBEvent.MainEvent) event).event, EBEvent.MainEvent.EVENT_MAIN_DEL_START)){
-                EventBus.getDefault().post(new EBEvent.BackgroundEvent(EBEvent.BackgroundEvent.EVENT_SYNC_DEL));
-            }
         }
     }
 
@@ -207,11 +216,8 @@ public class MainActivity extends Activity implements View.OnClickListener, Comp
         }
         for (View v :
                 views) {
-            if (v.getVisibility() == View.VISIBLE){
-                v.setVisibility(View.INVISIBLE);
-            } else if(v.getVisibility() == View.INVISIBLE){
-                v.setVisibility(View.VISIBLE);
-            }
+            int visibility = v.getVisibility();
+            v.setVisibility((visibility == View.VISIBLE) ? View.INVISIBLE : View.VISIBLE);
         }
         mLvVideos.setItemsCanFocus(mRLbrand.getVisibility()==View.VISIBLE);
     }
