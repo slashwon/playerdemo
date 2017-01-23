@@ -31,18 +31,13 @@ public class TopPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        if(position==1){
-            return new LocalVideos();
-        }
-        Fragment fragment = new Fragment();
-        return fragment;
+        return mFrags.get(position);
     }
 
 
     @Override
     public int getCount() {
-//        return mFrags.size();
-        return 2;
+        return mFrags.size();
     }
 
     @Override
