@@ -12,7 +12,7 @@ import java.util.List;
 import demo.slash.customplayer.bean.VideoItem;
 import demo.slash.customplayer.utils.Logger;
 import demo.slash.customplayer.utils.CommonUtils;
-import demo.slash.customplayer.view.MainActivity;
+import demo.slash.customplayer.view.LocalVideos;
 
 /**
  * Created by PICO-USER on 2016/12/13.
@@ -26,7 +26,7 @@ public class DbOperator {
     public static void initDatabase(Context ctx){
         sDbHelper = new VideoDbHelper(new SoftReference<>(ctx).get());
         sDatabase = sDbHelper.getWritableDatabase();
-        Logger.D(MainActivity.TAG,"database operator helper");
+        Logger.D(LocalVideos.TAG,"database operator helper");
     }
 
     public static void insert(VideoItem item){
@@ -57,7 +57,7 @@ public class DbOperator {
     }
 
     public static List<VideoItem> query(){
-        Logger.D(MainActivity.TAG,"query from db");
+        Logger.D(LocalVideos.TAG,"query from db");
         String sql_query = "select * from "+VideoDbHelper.DB_NAME + " order by "+VideoDbHelper.COL_DATE;
         Cursor cursor = sDatabase.rawQuery(sql_query, null);
         if(cursor==null || cursor.getCount()==0){
@@ -83,7 +83,7 @@ public class DbOperator {
             String sql_clear = "delete from "+VideoDbHelper.DB_NAME;
             sDatabase.execSQL(sql_clear);
         } catch (Exception e){
-            Logger.E(MainActivity.TAG,"database clear fail");
+            Logger.E(LocalVideos.TAG,"database clear fail");
         }
     }
 

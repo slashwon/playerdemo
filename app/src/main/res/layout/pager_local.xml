@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/qimo_green_image_background"
-    tools:context=".view.MainActivity">
+    tools:context=".view.LocalVideos">
 
    <!-- <RelativeLayout
         android:layout_width="match_parent"
@@ -32,7 +31,7 @@
         android:orientation="vertical"
         >
 
-        <include layout="@layout/main_header"/>
+        <!--<include layout="@layout/main_header"/>-->
 
     <ListView
         android:layout_width="match_parent"

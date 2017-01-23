@@ -3,11 +3,10 @@ package demo.slash.customplayer.controller;
 import android.app.Activity;
 import android.content.Context;
 import android.media.AudioManager;
-import android.media.VolumeProvider;
 import android.view.WindowManager;
 
 import demo.slash.customplayer.utils.Logger;
-import demo.slash.customplayer.view.MainActivity;
+import demo.slash.customplayer.view.LocalVideos;
 
 /**
  * Created by whs on 16-12-23.
@@ -38,7 +37,7 @@ public class DeviceController {
         int targetVolume = (int) (currVolume + maxVolume*rate);
         targetVolume = targetVolume>maxVolume ? maxVolume : targetVolume;
         admngr.setStreamVolume(AudioManager.STREAM_MUSIC,targetVolume,0);
-        Logger.D(MainActivity.TAG,"adjust volume : max =  "+maxVolume+";curr = "+currVolume+";target = "+targetVolume);
+        Logger.D(LocalVideos.TAG,"adjust volume : max =  "+maxVolume+";curr = "+currVolume+";target = "+targetVolume);
     }
 
     public void adjustLight(Activity activity,float touchMove,float maxMove){

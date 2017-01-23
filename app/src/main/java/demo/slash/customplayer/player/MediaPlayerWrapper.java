@@ -7,8 +7,7 @@ import java.io.IOException;
 
 import demo.slash.customplayer.listener.PlayerListener;
 import demo.slash.customplayer.utils.Logger;
-import demo.slash.customplayer.view.MainActivity;
-import tv.danmaku.ijk.media.player.IMediaPlayer;
+import demo.slash.customplayer.view.LocalVideos;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
 /**
@@ -56,7 +55,7 @@ public class MediaPlayerWrapper{
                 mPlayer.setDataSource(path);
                 mPlayer.prepareAsync();
             } catch (IOException e) {
-                Logger.E(MainActivity.TAG,"fail to set data source");
+                Logger.E(LocalVideos.TAG,"fail to set data source");
                 e.printStackTrace();
             }
         }
@@ -67,7 +66,7 @@ public class MediaPlayerWrapper{
     }
 
     public void init(PlayerListener listener){
-        Logger.D(MainActivity.TAG,"listener == null ? "+(listener==null));
+        Logger.D(LocalVideos.TAG,"listener == null ? "+(listener==null));
         if(mPlayer ==null){
             mPlayer = new IjkMediaPlayer();
         }
@@ -128,6 +127,6 @@ public class MediaPlayerWrapper{
     public void fastRateMove(float rate){
         long duration = mPlayer.getDuration();
         mPlayer.seekTo((long) (duration*rate));
-        Logger.D(MainActivity.TAG,"seek to = "+duration*rate);
+        Logger.D(LocalVideos.TAG,"seek to = "+duration*rate);
     }
 }

@@ -18,7 +18,7 @@ import demo.slash.customplayer.bean.VideoItem;
 import demo.slash.customplayer.data.database.DbOperator;
 import demo.slash.customplayer.utils.CommonUtils;
 import demo.slash.customplayer.utils.Logger;
-import demo.slash.customplayer.view.MainActivity;
+import demo.slash.customplayer.view.LocalVideos;
 
 public class ObserverService extends Service {
 
@@ -49,7 +49,7 @@ public class ObserverService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Logger.D(MainActivity.TAG,"Observer service is running");
+        Logger.D(LocalVideos.TAG,"Observer service is running");
         setIsRunning(true);
         registerObservers();
 
@@ -97,14 +97,14 @@ public class ObserverService extends Service {
 
         unregisterObservers();
 
-        Logger.D(MainActivity.TAG,"Observer service is destroy");
+        Logger.D(LocalVideos.TAG,"Observer service is destroy");
     }
 
     private void unregisterObservers() {
         if(mRunning){
             mThread.interrupt();
         }
-        Logger.D(MainActivity.TAG,"interrupted ? "+mThread.isInterrupted());
+        Logger.D(LocalVideos.TAG,"interrupted ? "+mThread.isInterrupted());
         if(null!=sObservers) {
             Iterator<FileObserver> iterator = sObservers.iterator();
             while (iterator.hasNext()) {
@@ -137,7 +137,7 @@ public class ObserverService extends Service {
             }
             switch (event){
                 case FileObserver.CREATE:
-                    Logger.D(MainActivity.TAG,"file observer: create "+ path);
+                    Logger.D(LocalVideos.TAG,"file observer: create "+ path);
                     VideoItem videoItem = CommonUtils.fromPath2Bean(path);
                     if(videoItem!=null) {
                         DbOperator.insert(videoItem);
@@ -145,12 +145,12 @@ public class ObserverService extends Service {
                     }
                     break;
                 case FileObserver.DELETE:
-                    Logger.D(MainActivity.TAG,"file observer: delete "+ path);
+                    Logger.D(LocalVideos.TAG,"file observer: delete "+ path);
                     DbOperator.delete(path);
                     EventBus.getDefault().post(new ObserverEvent(ObserverEvent.TYPE.DELETE,path));
                     break;
                 case FileObserver.MODIFY:
-                    Logger.D(MainActivity.TAG,"file observer: modify "+ path);
+                    Logger.D(LocalVideos.TAG,"file observer: modify "+ path);
 
                     break;
             }

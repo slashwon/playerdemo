@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import demo.slash.customplayer.view.MainActivity;
+import demo.slash.customplayer.view.LocalVideos;
 import demo.slash.customplayer.utils.Logger;
 
 /**
@@ -56,11 +56,11 @@ public class ThumbnailGener{
         mRetriever.setDataSource(mCurrPath);
         Bitmap bitmap = mRetriever.getFrameAtTime(100, MediaMetadataRetriever.OPTION_CLOSEST);
         if(null==bitmap){
-            Logger.D(MainActivity.TAG,"create thumbnail failed");
+            Logger.D(LocalVideos.TAG,"create thumbnail failed");
             return ;
         } else {
             Bitmap thumb = Bitmap.createScaledBitmap(bitmap, DST_WIDTH, DST_HEIGHT, false);
-            Logger.D(MainActivity.TAG,"video thumbnail created");
+            Logger.D(LocalVideos.TAG,"video thumbnail created");
             Message msg = mHandler.obtainMessage(0);
             msg.obj = thumb;
             mHandler.sendMessage(msg);

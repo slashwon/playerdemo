@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.text.method.Touch;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -45,7 +44,7 @@ public class VideoSurfaceView extends SurfaceView implements IjkMediaPlayer.OnPr
         vscListener = new IMediaPlayer.OnVideoSizeChangedListener() {
             @Override
             public void onVideoSizeChanged(IMediaPlayer mp, int width, int height, int sar_num, int sar_den) {
-                Logger.D(MainActivity.TAG, "video size changed: width = " + width + "; height = " + height);
+                Logger.D(LocalVideos.TAG, "video size changed: width = " + width + "; height = " + height);
             }
         };
 
@@ -57,7 +56,7 @@ public class VideoSurfaceView extends SurfaceView implements IjkMediaPlayer.OnPr
                 getPlayer().setState(MediaPlayerWrapper.State.START);
                 if (null != mSeekBar) {
                     mSeekBar.startTracking();
-                    Logger.D(MainActivity.TAG, "seek bar start tracking");
+                    Logger.D(LocalVideos.TAG, "seek bar start tracking");
                 }
             }
         };
@@ -65,7 +64,7 @@ public class VideoSurfaceView extends SurfaceView implements IjkMediaPlayer.OnPr
         ocListener = new IMediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(IMediaPlayer mp) {
-                Logger.D(MainActivity.TAG,"on completion");
+                Logger.D(LocalVideos.TAG,"on completion");
                 if(null!=mSeekBar){
                     mSeekBar.setProgress(0);
                 }
@@ -114,11 +113,11 @@ public class VideoSurfaceView extends SurfaceView implements IjkMediaPlayer.OnPr
 
     public void playVideo(String path){
         if(mPlayer==null){
-            Logger.D(MainActivity.TAG,"please call initPlayer() first");
+            Logger.D(LocalVideos.TAG,"please call initPlayer() first");
             return ;
         }
         if(mSurfaceHolder==null){
-            Logger.D(MainActivity.TAG,"surface holder is not prepared yet");
+            Logger.D(LocalVideos.TAG,"surface holder is not prepared yet");
             return ;
         }
         mPlayer.setDisplay(mSurfaceHolder);
@@ -179,18 +178,18 @@ public class VideoSurfaceView extends SurfaceView implements IjkMediaPlayer.OnPr
 
     public void onPrepared(IMediaPlayer mp) {
         mp.start();
-        Logger.D(MainActivity.TAG,"player is prepared");
+        Logger.D(LocalVideos.TAG,"player is prepared");
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        Logger.D(MainActivity.TAG,"holder surface created");
+        Logger.D(LocalVideos.TAG,"holder surface created");
         mSurfaceHolder = holder;
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        Logger.D(MainActivity.TAG,"holder surface changed");
+        Logger.D(LocalVideos.TAG,"holder surface changed");
         mSurfaceHolder = holder;
         mHandler.sendEmptyMessage(MSG_SURFACE_READY);
     }
@@ -198,7 +197,7 @@ public class VideoSurfaceView extends SurfaceView implements IjkMediaPlayer.OnPr
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         mSurfaceHolder = null;
-        Logger.D(MainActivity.TAG,"holder surface destroyed");
+        Logger.D(LocalVideos.TAG,"holder surface destroyed");
     }
 
     @Override

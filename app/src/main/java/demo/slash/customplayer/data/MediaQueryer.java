@@ -6,12 +6,8 @@ import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -20,7 +16,7 @@ import demo.slash.customplayer.bean.VideoItem;
 import demo.slash.customplayer.data.database.DbOperator;
 import demo.slash.customplayer.utils.CommonUtils;
 import demo.slash.customplayer.utils.Logger;
-import demo.slash.customplayer.view.MainActivity;
+import demo.slash.customplayer.view.LocalVideos;
 
 public class MediaQueryer {
 
@@ -37,7 +33,7 @@ public class MediaQueryer {
         if(null==mQuery)
         {
                 mQuery = new MediaQueryer();
-                Log.d(MainActivity.TAG,"MediaQuerier has been created.");
+                Log.d(LocalVideos.TAG,"MediaQuerier has been created.");
 
         }
         return mQuery;
@@ -94,7 +90,7 @@ public class MediaQueryer {
         }
         File root = new File(Environment.getExternalStorageDirectory().getAbsolutePath());
         each(videoItems,root);
-        Logger.D(MainActivity.TAG,"list size = "+videoItems.size());
+        Logger.D(LocalVideos.TAG,"list size = "+videoItems.size());
         return videoItems;
     }
 
@@ -107,7 +103,7 @@ public class MediaQueryer {
                     each(list, f);
                 } else {
                     String path = f.getAbsolutePath();
-                    Logger.D(MainActivity.TAG, "path = " + path);
+                    Logger.D(LocalVideos.TAG, "path = " + path);
                     if (CommonUtils.isVideo(path)) {
                         VideoItem videoItem = CommonUtils.fromPath2Bean(path);
                         if (videoItem != null) {

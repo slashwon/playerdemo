@@ -1,9 +1,7 @@
 package demo.slash.customplayer.controller;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatSeekBar;
 import android.view.Display;
-import android.view.DragEvent;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,7 +11,7 @@ import demo.slash.customplayer.R;
 import demo.slash.customplayer.player.MediaPlayerWrapper;
 import demo.slash.customplayer.utils.Logger;
 import demo.slash.customplayer.view.AutoSeekBar;
-import demo.slash.customplayer.view.MainActivity;
+import demo.slash.customplayer.view.LocalVideos;
 import demo.slash.customplayer.view.PlayerActivity;
 import demo.slash.customplayer.view.VideoSurfaceView;
 
@@ -47,7 +45,7 @@ public class GestureController extends GestureDetector {
             Display dd = ((PlayerActivity) context).getWindowManager().getDefaultDisplay();
             mScreenW = dd.getWidth();
             mScreenH = dd.getHeight();
-            Logger.D(MainActivity.TAG,"screen width = "+mScreenW+";screen height = "+mScreenH);
+            Logger.D(LocalVideos.TAG,"screen width = "+mScreenW+";screen height = "+mScreenH);
             mVideoView =  view;
             mControllView = controll;
             initComponent(controll);
@@ -140,7 +138,7 @@ public class GestureController extends GestureDetector {
             if(dragged) {
                 int sbWidth = seekBar.getMax();
                 float rate = (float) progress / sbWidth;
-                Logger.D(MainActivity.TAG, "rate = " + rate);
+                Logger.D(LocalVideos.TAG, "rate = " + rate);
                 mVideoView.fastRateMove(rate);
             }
         }
@@ -157,9 +155,9 @@ public class GestureController extends GestureDetector {
         public void updateSeekbarProgress(int progress){
             long total = mVideoView.getPlayer().getDuration();
             long currPos = mVideoView.getPlayer().getPlayer().getCurrentPosition();
-            Logger.D(MainActivity.TAG,"total = "+total+";curr = "+currPos);
+            Logger.D(LocalVideos.TAG,"total = "+total+";curr = "+currPos);
             long l = currPos * mSeekBar.getMax() / total;
-            Logger.D(MainActivity.TAG,"progress = "+l);
+            Logger.D(LocalVideos.TAG,"progress = "+l);
             mSeekBar.setProgress((int) (currPos*100/total));
         }
 

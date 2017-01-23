@@ -16,7 +16,7 @@ import java.util.List;
 
 import demo.slash.customplayer.bean.VideoItem;
 import demo.slash.customplayer.data.database.DbOperator;
-import demo.slash.customplayer.view.MainActivity;
+import demo.slash.customplayer.view.LocalVideos;
 
 /**
  * Created by Administrator on 2016/12/11 0011.
@@ -137,10 +137,10 @@ public class CommonUtils {
                 File file = new File(path);
                 if(file.exists()){
                     boolean delete = file.delete();
-                    Logger.D(MainActivity.TAG,"file delete local ? "+delete);
+                    Logger.D(LocalVideos.TAG,"file delete local ? "+delete);
                 }
                 boolean d = DbOperator.delete(path);
-                Logger.D(MainActivity.TAG,"delete from database ? "+d);
+                Logger.D(LocalVideos.TAG,"delete from database ? "+d);
                 iterator.remove();
             }
         }
