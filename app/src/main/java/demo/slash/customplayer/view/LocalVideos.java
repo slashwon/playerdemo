@@ -10,11 +10,11 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -23,11 +23,10 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import demo.slash.customplayer.R;
-import demo.slash.customplayer.adapter.VideoAdapter;
+import demo.slash.customplayer.adapter.Video2Adapter;
 import demo.slash.customplayer.bean.EBEvent;
 import demo.slash.customplayer.bean.ObserverEvent;
 import demo.slash.customplayer.bean.VideoItem;
@@ -37,10 +36,10 @@ import demo.slash.customplayer.service.ObserverService;
 import demo.slash.customplayer.utils.CommonUtils;
 import demo.slash.customplayer.utils.Logger;
 
-public class LocalVideos extends Fragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class LocalVideos extends Fragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
     public static final String TAG = "VideoPlayer";
-    private static final int MSG_QUERY_START = 10;
-    private static final int MSG_QUERY_END = 20;
+    public static final int MSG_QUERY_START = 10;
+    public static final int MSG_QUERY_END = 20;
 
     private Handler mHandler = new Handler(){
         @Override
@@ -49,13 +48,11 @@ public class LocalVideos extends Fragment implements View.OnClickListener, Compo
             switch (msg.what){
                 case MSG_QUERY_START:
                     Logger.D(TAG,"query started");
-                    mPbLoading.setVisibility(View.VISIBLE);
-                    mAdapter.notifyDataSetChanged();
+                    videoAdapter.refresh(mHandler);
                     break;
                 case MSG_QUERY_END:
                     Logger.D(TAG,"query end");
-                    mPbLoading.setVisibility(View.INVISIBLE);
-                    mAdapter.notifyDataSetChanged();
+                    mRefresh.setRefreshing(false);
                     break;
             }
         }
@@ -63,20 +60,19 @@ public class LocalVideos extends Fragment implements View.OnClickListener, Compo
     private ListView mLvVideos;
 
     List<VideoItem> videoList = new ArrayList<>();
-    private VideoAdapter mAdapter;
-    private View mPbLoading;
+
+    private Video2Adapter videoAdapter;
+
     private Intent mService;
     private MediaQueryer.IOnLoadingDoneListener mLoadedListener = new MediaQueryer.IOnLoadingDoneListener() {
         @Override
-        public void onLoadingDone() {
+        public void onLoadingDone(List<VideoItem> l) {
                 mHandler.sendEmptyMessage(MSG_QUERY_END);
         }
     };
-//    private View mRLbrand;
-//    private View mRLoperate;
-//    private CheckBox mCBAll;
     private FragmentActivity mActivity;
     private View mRootView;
+    private SwipeRefreshLayout mRefresh;
 
     @Nullable
     @Override
@@ -86,17 +82,11 @@ public class LocalVideos extends Fragment implements View.OnClickListener, Compo
     }
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-//        mRLbrand = mRootView.findViewById(R.id.rl_main_brand);
-//        mRLoperate = mRootView.findViewById(R.id.rl_main_operate);
-//        mRootView.findViewById(R.id.ib_main_header_del).setOnClickListener(this);
-//        mCBAll = (CheckBox) mRootView.findViewById(R.id.cb_main_header_all);
-//        mCBAll.setOnCheckedChangeListener(this);
         mLvVideos = (ListView) mRootView.findViewById(R.id.lv_list);
 
-        mPbLoading = mRootView.findViewById(R.id.pb_loading);
-
-//        mRootView.findViewById(R.id.ib_main_refresh).setOnClickListener(this);
-//        updateHeaderView(mRLoperate);
+        // swiperefresh
+        mRefresh = (SwipeRefreshLayout) mRootView.findViewById(R.id.refresh_layout_local);
+        mRefresh.setOnRefreshListener(this);
     }
 
     @Override
@@ -106,17 +96,17 @@ public class LocalVideos extends Fragment implements View.OnClickListener, Compo
 
         EventBus.getDefault().register(this);
 
-        mAdapter = new VideoAdapter(mActivity, videoList);
-        mLvVideos.setAdapter(mAdapter);
-        mLvVideos.setOnItemClickListener(mAdapter);
-        mLvVideos.setOnItemLongClickListener(mAdapter);
+        videoAdapter = new Video2Adapter(mActivity,R.layout.video_item_layout);
+        mLvVideos.setAdapter(videoAdapter);
+        mLvVideos.setOnItemClickListener(videoAdapter);
+        mLvVideos.setOnItemLongClickListener(videoAdapter);
 
         DbOperator.initDatabase(mActivity);
         getPermissions();
 
         mHandler.sendEmptyMessage(MSG_QUERY_START);
-        MediaQueryer.instance().syncLoadVideos(mActivity,false,videoList,mLoadedListener);
-        serviceStart();
+//        serviceStart();
+
     }
 
     private void serviceStart() {
@@ -139,7 +129,6 @@ public class LocalVideos extends Fragment implements View.OnClickListener, Compo
     public void onDestroyView() {
         super.onDestroyView();
         EventBus.getDefault().unregister(this);
-//        serviceStop();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -148,10 +137,9 @@ public class LocalVideos extends Fragment implements View.OnClickListener, Compo
 
         if(event instanceof String){
             switch ((String)event){
-                case VideoAdapter.EB_MSG_UPDATE_HEADER:
+               /* case VideoAdapter.EB_MSG_UPDATE_HEADER:
                     Logger.D(TAG,"receive eb event: "+event);
-//                    updateHeaderView(mRLoperate,mRLbrand);
-                    break;
+                    break;*/
                 case CommonUtils.SDCARD_UNMOUNTED:
                     Toast.makeText(mActivity,"未检测到SD卡!",Toast.LENGTH_LONG).show();
                     mHandler.sendEmptyMessage(MSG_QUERY_END);
@@ -164,7 +152,7 @@ public class LocalVideos extends Fragment implements View.OnClickListener, Compo
         if(event instanceof EBEvent.MainEvent){
             switch (((EBEvent.MainEvent) event).event){
                 case EBEvent.MainEvent.EVENT_MAIN_DEL_DONE:
-                    mAdapter.updateCheckState(false);
+//                    mAdapter.updateCheckState(false);
 //                    updateHeaderView(mRLbrand,mRLoperate);
                     break;
                 case EBEvent.MainEvent.EVENT_MAIN_DEL_START:
@@ -228,17 +216,22 @@ public class LocalVideos extends Fragment implements View.OnClickListener, Compo
 
     @Override
     public void onClick(View v) {
-        if(v.getId()==R.id.ib_main_header_del){
+       /* if(v.getId()==R.id.ib_main_header_del){
             EventBus.getDefault().post(new EBEvent.MainEvent(EBEvent.MainEvent.EVENT_MAIN_DEL_START));
         }
         if(v.getId() == R.id.ib_main_refresh){
             mHandler.sendEmptyMessage(MSG_QUERY_START);
             MediaQueryer.instance().syncLoadVideos(mActivity,true,videoList,mLoadedListener);
-        }
+        }*/
+    }
+
+    @Override
+    public void onRefresh() {
+        videoAdapter.refresh(mHandler);
     }
 
 
-    @Override
+   /* @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if(buttonView.getId()==R.id.cb_main_header_all){
             Iterator<VideoItem> iterator = videoList.iterator();
@@ -250,5 +243,5 @@ public class LocalVideos extends Fragment implements View.OnClickListener, Compo
 //            mAdapter.updateCheckState(mCBAll.isChecked());
             mAdapter.notifyDataSetChanged();
         }
-    }
+    }*/
 }

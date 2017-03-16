@@ -5,33 +5,12 @@
     android:layout_height="match_parent"
     tools:context=".view.LocalVideos">
 
-   <!-- <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/main_refresh"
-        >
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Refresh"
-            android:onClick="refresh"
-            android:id="@+id/btn_refresh"
-            />
-        <include layout="@layout/main_item_operation"
-                 android:layout_height="wrap_content"
-                 android:layout_width="match_parent"
-                 android:id="@+id/main_operate_layout"
-            />
-    </RelativeLayout>-->
-
-    <LinearLayout
+    <android.support.v4.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:orientation="vertical"
+        android:id="@+id/refresh_layout_local"
         >
-
-        <!--<include layout="@layout/main_header"/>-->
 
     <ListView
         android:layout_width="match_parent"
@@ -40,12 +19,6 @@
         android:dividerHeight="1dp"
         android:headerDividersEnabled="true"
         />
-    </LinearLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
-    <android.support.v4.widget.ContentLoadingProgressBar
-        android:layout_centerInParent="true"
-        style="@style/Widget.AppCompat.ProgressBar"
-        android:layout_width="wrap_content"
-        android:id="@+id/pb_loading"
-        android:layout_height="wrap_content"/>
 </RelativeLayout>

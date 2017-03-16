@@ -1,14 +1,12 @@
 package demo.slash.customplayer.utils;
 
-import android.os.Environment;
-import android.text.TextUtils;
-
 import java.util.Iterator;
 import java.util.List;
 
 import demo.slash.customplayer.bean.VideoItem;
 
 /**
+ * Why did I wrote this ?
  * Created by PICO-USER on 2016/12/16.
  */
 public class CollectionUtils {

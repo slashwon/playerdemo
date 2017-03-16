@@ -31,8 +31,8 @@ public class VideoSurfaceView extends SurfaceView implements IjkMediaPlayer.OnPr
     private IMediaPlayer.OnVideoSizeChangedListener vscListener;
     private IMediaPlayer.OnPreparedListener opListener;
     private IMediaPlayer.OnCompletionListener ocListener;
-    //    private int mWidth;
-//    private int mHeight;
+    private int mWidth = 640;
+    private int mHeight = 1020;
 
     public VideoSurfaceView(Context context) {
         super(context);
@@ -44,19 +44,23 @@ public class VideoSurfaceView extends SurfaceView implements IjkMediaPlayer.OnPr
         vscListener = new IMediaPlayer.OnVideoSizeChangedListener() {
             @Override
             public void onVideoSizeChanged(IMediaPlayer mp, int width, int height, int sar_num, int sar_den) {
-                Logger.D(LocalVideos.TAG, "video size changed: width = " + width + "; height = " + height);
+                System.out.println( "video size changed: width = " + width + "; height = " + height);
+                mWidth = width;
+                mHeight = height;
+                invalidate();
             }
         };
 
         opListener = new IMediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(IMediaPlayer mp) {
+                System.out.println("onPrepared");
                 mSeekBar.bindPlayer(mp);
                 mp.start();
                 getPlayer().setState(MediaPlayerWrapper.State.START);
                 if (null != mSeekBar) {
                     mSeekBar.startTracking();
-                    Logger.D(LocalVideos.TAG, "seek bar start tracking");
+                    System.out.println(LocalVideos.TAG+ " seek bar start tracking");
                 }
             }
         };
@@ -64,7 +68,7 @@ public class VideoSurfaceView extends SurfaceView implements IjkMediaPlayer.OnPr
         ocListener = new IMediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(IMediaPlayer mp) {
-                Logger.D(LocalVideos.TAG,"on completion");
+                System.out.println(LocalVideos.TAG+"on completion");
                 if(null!=mSeekBar){
                     mSeekBar.setProgress(0);
                 }
@@ -134,9 +138,6 @@ public class VideoSurfaceView extends SurfaceView implements IjkMediaPlayer.OnPr
 
     private void updateSeekbar() {
         MediaPlayerWrapper.State state = mPlayer.getState();
-//        Message msg = mHandler.obtainMessage(MSG_UPDATE_SB);
-//        msg.obj = state;
-//        mHandler.sendMessage(msg);
         switch (state){
             case STOP:
                 if(null!=mSeekBar){
@@ -202,8 +203,25 @@ public class VideoSurfaceView extends SurfaceView implements IjkMediaPlayer.OnPr
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-//        setMeasuredDimension(mWidth,mHeight);
+        super.onMeasure(widthMeasureSpec,heightMeasureSpec);
+
+        System.out.println("on measure   mWidth = "+mWidth+";mHeight = "+mHeight);
+
+        int wmode = MeasureSpec.getMode(widthMeasureSpec);
+        int hmode = MeasureSpec.getMode(heightMeasureSpec);
+        int wsize = MeasureSpec.getSize(widthMeasureSpec);
+        int hsize = MeasureSpec.getSize(heightMeasureSpec);
+
+        boolean wMost = wmode == MeasureSpec.AT_MOST;
+        boolean hMost = hmode == MeasureSpec.AT_MOST;
+
+        if (wMost && hMost) {
+            setMeasuredDimension(mWidth,mHeight);
+        } else if (wMost){
+            setMeasuredDimension(mWidth,hsize);
+        } else if (hMost) {
+            setMeasuredDimension(wsize,mHeight);
+        }
     }
 
     private Handler mHandler = new Handler(){

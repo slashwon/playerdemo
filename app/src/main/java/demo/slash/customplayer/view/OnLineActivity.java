@@ -1,5 +1,6 @@
 package demo.slash.customplayer.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,10 +17,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 import demo.slash.customplayer.R;
 import demo.slash.customplayer.adapter.AbsBaseAdapter;
+import demo.slash.customplayer.adapter.GlobalHolder;
 import demo.slash.customplayer.bean.VideoOnline;
 import demo.slash.customplayer.utils.Logger;
 
@@ -36,7 +37,7 @@ public class OnLineActivity extends AppCompatActivity {
 
         mVideoOnlines = new ArrayList<>();
         mLvOnline = (ListView) findViewById(R.id.lv_online);
-        mAdapter = new OnlineAdapter(mVideoOnlines);
+        mAdapter = new OnlineAdapter(this,R.layout.online_item_layout);
         mLvOnline.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
         mLvOnline.setOnItemClickListener(mAdapter);
@@ -83,34 +84,28 @@ public class OnLineActivity extends AppCompatActivity {
 
     class OnlineAdapter extends AbsBaseAdapter<VideoOnline> implements AdapterView.OnItemClickListener {
 
-        protected OnlineAdapter(List list) {
-            super(list);
+        protected OnlineAdapter(Context c, int layoutId) {
+            super(c, layoutId);
         }
 
         @Override
-        protected void onBindHolderData(IViewHolder holder, VideoOnline item) {
-            ((ViewHolder) holder).title.setText(item.getTitle());
-            ((ViewHolder) holder).url.setText(item.getUrl());
+        protected void onBindData(GlobalHolder holder, VideoOnline item) {
+            ((TextView)holder.get(R.id.tv_title)).setText(item.title);
+            ((TextView)holder.get(R.id.tv_url)).setText(item.url);
         }
 
         @Override
-        protected void onGetHolderView(IViewHolder holder, View convertView) {
-            holder = new ViewHolder();
-            convertView = View.inflate(OnLineActivity.this,R.layout.online_item_layout,null);
-            ((ViewHolder) holder).title = (TextView) convertView.findViewById(R.id.tv_title);
-            ((ViewHolder) holder).url = (TextView) convertView.findViewById(R.id.tv_title);
+        protected void onBindView(GlobalHolder holder) {
+            holder.save(R.id.tv_title);
+            holder.save(R.id.tv_url);
         }
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Intent intent = new Intent(OnLineActivity.this, PlayerActivity.class);
-            intent.setData(Uri.parse(getItem(position).getUrl()));
+            intent.setData(Uri.parse(getItem(position).url));
             startActivity(intent);
         }
     }
 
-    class ViewHolder implements AbsBaseAdapter.IViewHolder{
-        TextView title;
-        TextView url;
-    }
 }

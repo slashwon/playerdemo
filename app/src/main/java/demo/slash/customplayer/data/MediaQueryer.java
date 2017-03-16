@@ -39,7 +39,7 @@ public class MediaQueryer {
         return mQuery;
     }
 
-    public void syncLoadVideos(final Context c,final boolean reload, final List<VideoItem> list, final IOnLoadingDoneListener listener){
+    public void syncLoadVideos(final Context c,final boolean reload, final IOnLoadingDoneListener listener){
         if(!CommonUtils.checkSdcard()){
             return;
         }
@@ -57,11 +57,9 @@ public class MediaQueryer {
                 if(null==l || l.size()==0){
                     l = eachAll(c);
                 }
-                list.clear();
-                list.addAll(l);
                 mIsLoading = false;
                 if(null!=listener){
-                    listener.onLoadingDone();
+                    listener.onLoadingDone(l);
                 }
             }
         });
@@ -119,6 +117,6 @@ public class MediaQueryer {
     }
 
     public interface IOnLoadingDoneListener{
-        void onLoadingDone();
+        void onLoadingDone(List<VideoItem> l);
     }
 }

@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import demo.slash.customplayer.R;
-import demo.slash.customplayer.view.LocalVideos;
 
 /**
+ * 首页
  * Created by PICO-USER on 2017/1/23.
  */
 public class TopPagerAdapter extends FragmentPagerAdapter {

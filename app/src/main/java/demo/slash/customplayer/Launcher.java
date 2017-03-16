@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -43,6 +42,7 @@ public class Launcher extends FragmentActivity {
 
     private void initTabs() {
         try {
+            // It's ugly but I have no better idea for now
             // modify indicator height
             Class<?> pts = Class.forName("android.support.v4.view.PagerTabStrip");
             Field mIndicatorHeight = pts.getDeclaredField("mIndicatorHeight");
