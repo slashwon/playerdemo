@@ -4,8 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -24,25 +27,32 @@ import demo.slash.customplayer.adapter.GlobalHolder;
 import demo.slash.customplayer.bean.VideoOnline;
 import demo.slash.customplayer.utils.Logger;
 
-public class OnLineActivity extends AppCompatActivity {
+/**
+ * Created by root on 17-1-23.
+ */
 
+public class OnlineFragment extends Fragment {
     private ListView mLvOnline;
-    private ArrayList<VideoOnline> mVideoOnlines;
     private OnlineAdapter mAdapter;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_on_line);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.activity_on_line,null);
+    }
 
-        mVideoOnlines = new ArrayList<>();
-        mLvOnline = (ListView) findViewById(R.id.lv_online);
-        mAdapter = new OnlineAdapter(this,R.layout.online_item_layout);
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mLvOnline = (ListView) getView().findViewById(R.id.lv_online);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mAdapter = new OnlineAdapter(getContext());
         mLvOnline.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged();
         mLvOnline.setOnItemClickListener(mAdapter);
-
-        loadOnline();
     }
 
     private void loadOnline() {
@@ -83,9 +93,30 @@ public class OnLineActivity extends AppCompatActivity {
     }
 
     class OnlineAdapter extends AbsBaseAdapter<VideoOnline> implements AdapterView.OnItemClickListener {
+        public OnlineAdapter(Context c){
+            super(c,R.layout.online_item_layout);
+            loadOnlineAddresses();
+        }
 
-        protected OnlineAdapter(Context c, int layoutId) {
-            super(c, layoutId);
+        private void loadOnlineAddresses() {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    // fake dates
+                    mList = new ArrayList<>();
+                    mList.add(new VideoOnline("香港卫视","rtmp://live.hkstv.hk.lxdns.com/live/hks"));
+                    mList.add(new VideoOnline("珠海","rtsp://218.204.223.237:554/live/1/66251FC11353191F/e7ooqwcfbqjoo80j.sdp"));
+                    mList.add(new VideoOnline("大熊兔（点播）  ","rtsp://184.72.239.149/vod/mp4://BigBuckBunny_175k.mov"));
+                    mList.add(new VideoOnline("香港卫视2","http://live.hkstv.hk.lxdns.com/live/hks/playlist.m3u8"));
+                    mList.add(new VideoOnline("CCTV1高清","http://ivi.bupt.edu.cn/hls/cctv1hd.m3u8"));
+                    mList.add(new VideoOnline("CCTV3高清","http://ivi.bupt.edu.cn/hls/cctv3hd.m3u8"));
+                    mList.add(new VideoOnline("CCTV5高清","http://ivi.bupt.edu.cn/hls/cctv5hd.m3u8"));
+                    mList.add(new VideoOnline("CCTV5+高清","http://ivi.bupt.edu.cn/hls/cctv5phd.m3u8"));
+                    mList.add(new VideoOnline("CCTV6高清","http://ivi.bupt.edu.cn/hls/cctv6hd.m3u8"));
+
+                    notifyDataSetChanged();
+                }
+            }).start();
         }
 
         @Override
@@ -102,10 +133,9 @@ public class OnLineActivity extends AppCompatActivity {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Intent intent = new Intent(OnLineActivity.this, PlayerActivity.class);
+            Intent intent = new Intent(getContext(), PlayerActivity.class);
             intent.setData(Uri.parse(getItem(position).url));
             startActivity(intent);
         }
     }
-
 }

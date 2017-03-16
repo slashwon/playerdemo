@@ -48,17 +48,10 @@ public class PlayerActivity extends Activity {
     protected void onStart() {
         super.onStart();
         String path = getIntent().getData().toString();
+        System.out.println("video path = "+path);
         if(!TextUtils.isEmpty(path)){
             mVideoView.initPlayer();
             mVideoView.setPath(path);
-
-            // rtmp support
-//            mVideoView.setPath("rtmp://live.hkstv.hk.lxdns.com/live/hks");
-
-            // http
-//            mVideoView.setPath("http://live.hkstv.hk.lxdns.com/live/hks/playlist.m3u8");
-            // rtsp
-//            mVideoView.setPath("rtsp://116.199.127.68/huayu");
         }
 
     }

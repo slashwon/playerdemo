@@ -22,8 +22,6 @@
             android:enabled="true"
             android:exported="true"/>
 
-        <activity android:name=".view.OnLineActivity">
-        </activity>
         <activity android:name=".Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

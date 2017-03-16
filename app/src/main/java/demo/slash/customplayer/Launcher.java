@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 import demo.slash.customplayer.adapter.TopPagerAdapter;
 import demo.slash.customplayer.view.LocalVideos;
-import demo.slash.customplayer.view.OnlineVideos;
+import demo.slash.customplayer.view.OnlineFragment;
 
 public class Launcher extends FragmentActivity {
 
@@ -67,7 +67,7 @@ public class Launcher extends FragmentActivity {
     }
 
     private ArrayList<Fragment> initFragments() {
-        OnlineVideos online = new OnlineVideos();
+        OnlineFragment online = new OnlineFragment();
         LocalVideos local = new LocalVideos();
         ArrayList<Fragment> fragments = new ArrayList<>();
         fragments.add(online);
