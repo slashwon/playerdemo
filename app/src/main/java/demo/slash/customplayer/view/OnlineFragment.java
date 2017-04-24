@@ -13,23 +13,12 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
 import demo.slash.customplayer.R;
 import demo.slash.customplayer.adapter.AbsBaseAdapter;
 import demo.slash.customplayer.adapter.GlobalHolder;
 import demo.slash.customplayer.bean.VideoOnline;
-import demo.slash.customplayer.utils.Logger;
-
-/**
- * Created by root on 17-1-23.
- */
 
 public class OnlineFragment extends Fragment {
     private ListView mLvOnline;
@@ -55,6 +44,8 @@ public class OnlineFragment extends Fragment {
         mLvOnline.setOnItemClickListener(mAdapter);
     }
 
+    /*
+//    code for testing online
     private void loadOnline() {
         new Thread(new Runnable() {
             @Override
@@ -90,7 +81,7 @@ public class OnlineFragment extends Fragment {
                 }
             }
         }).start();
-    }
+    }*/
 
     class OnlineAdapter extends AbsBaseAdapter<VideoOnline> implements AdapterView.OnItemClickListener {
         public OnlineAdapter(Context c){
@@ -104,6 +95,7 @@ public class OnlineFragment extends Fragment {
                 public void run() {
                     // fake dates
                     mList = new ArrayList<>();
+                    mList.add(new VideoOnline("本地服务器测试","http://172.31.83.5/video/outman.mp4"));
                     mList.add(new VideoOnline("香港卫视","rtmp://live.hkstv.hk.lxdns.com/live/hks"));
                     mList.add(new VideoOnline("珠海","rtsp://218.204.223.237:554/live/1/66251FC11353191F/e7ooqwcfbqjoo80j.sdp"));
                     mList.add(new VideoOnline("大熊兔（点播）  ","rtsp://184.72.239.149/vod/mp4://BigBuckBunny_175k.mov"));

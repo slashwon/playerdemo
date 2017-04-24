@@ -8,10 +8,16 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.danikula.videocache.HttpProxyCacheServer;
+
+import demo.slash.customplayer.App;
 import demo.slash.customplayer.R;
 import demo.slash.customplayer.controller.GestureController;
+import demo.slash.customplayer.utils.Logger;
 
 public class PlayerActivity extends Activity {
+
+    private static final String TAG = "PlayerActivity";
 
     private VideoSurfaceView mVideoView;
     private GestureController mGestureDetector;
@@ -49,11 +55,22 @@ public class PlayerActivity extends Activity {
         super.onStart();
         String path = getIntent().getData().toString();
         System.out.println("video path = "+path);
-        if(!TextUtils.isEmpty(path)){
-            mVideoView.initPlayer();
+
+        if (TextUtils.isEmpty(path)) return;
+
+        mVideoView.initPlayer();
+
+        if (path.startsWith("http:")) {
+            Logger.E(TAG,"播放网络视频"+path);
+            App app = (App) getApplication();
+            HttpProxyCacheServer proxy = app.getProxy(this);
+            String proxyUrl = proxy.getProxyUrl(path);
+            Logger.E(TAG,"HttpProxyCache得到的缓存视频路径为"+proxyUrl);
+            mVideoView.setPath(proxyUrl);
+        } else {
+            Logger.E(TAG,"播放本地视频");
             mVideoView.setPath(path);
         }
-
     }
 
     @Override

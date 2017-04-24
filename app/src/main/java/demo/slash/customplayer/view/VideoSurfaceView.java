@@ -130,7 +130,7 @@ public class VideoSurfaceView extends SurfaceView implements IjkMediaPlayer.OnPr
     public void startVideo(){
         mPlayer.start();
         mSeekBar.startTracking();
-        updateSeekbar();
+//        updateSeekbar();
     }
 
     private void updateSeekbar() {
@@ -147,12 +147,12 @@ public class VideoSurfaceView extends SurfaceView implements IjkMediaPlayer.OnPr
     public void stopVideo(){
         mPlayer.stop();
 
-        updateSeekbar();
+//        updateSeekbar();
     }
 
     public void pauseVideo(){
        mPlayer.pause();
-        updateSeekbar();
+//        updateSeekbar();
     }
 
     public void release(){
@@ -251,7 +251,4 @@ public class VideoSurfaceView extends SurfaceView implements IjkMediaPlayer.OnPr
         mSeekBar = (AutoSeekBar) seekBar;
     }
 
-//    public void setActivity(PlayerActivity playerActivity) {
-//        mActivity = playerActivity;
-//    }
 }

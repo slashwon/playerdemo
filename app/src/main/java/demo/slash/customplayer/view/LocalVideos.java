@@ -28,30 +28,28 @@ import java.util.List;
 import demo.slash.customplayer.R;
 import demo.slash.customplayer.adapter.Video2Adapter;
 import demo.slash.customplayer.bean.EBEvent;
-import demo.slash.customplayer.bean.ObserverEvent;
 import demo.slash.customplayer.bean.VideoItem;
 import demo.slash.customplayer.data.MediaQueryer;
 import demo.slash.customplayer.data.database.DbOperator;
-import demo.slash.customplayer.service.ObserverService;
 import demo.slash.customplayer.utils.CommonUtils;
 import demo.slash.customplayer.utils.Logger;
 
-public class LocalVideos extends Fragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class LocalVideos extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     public static final String TAG = "VideoPlayer";
     public static final int MSG_QUERY_START = 10;
     public static final int MSG_QUERY_END = 20;
 
-    private Handler mHandler = new Handler(){
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            switch (msg.what){
+            switch (msg.what) {
                 case MSG_QUERY_START:
-                    Logger.D(TAG,"query started");
+                    Logger.D(TAG, "query started");
                     videoAdapter.refresh(mHandler);
                     break;
                 case MSG_QUERY_END:
-                    Logger.D(TAG,"query end");
+                    Logger.D(TAG, "query end");
                     mRefresh.setRefreshing(false);
                     break;
             }
@@ -67,7 +65,7 @@ public class LocalVideos extends Fragment implements View.OnClickListener, Swipe
     private MediaQueryer.IOnLoadingDoneListener mLoadedListener = new MediaQueryer.IOnLoadingDoneListener() {
         @Override
         public void onLoadingDone(List<VideoItem> l) {
-                mHandler.sendEmptyMessage(MSG_QUERY_END);
+            mHandler.sendEmptyMessage(MSG_QUERY_END);
         }
     };
     private FragmentActivity mActivity;
@@ -80,6 +78,7 @@ public class LocalVideos extends Fragment implements View.OnClickListener, Swipe
         mRootView = inflater.inflate(R.layout.pager_local, null);
         return mRootView;
     }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         mLvVideos = (ListView) mRootView.findViewById(R.id.lv_list);
@@ -96,7 +95,7 @@ public class LocalVideos extends Fragment implements View.OnClickListener, Swipe
 
         EventBus.getDefault().register(this);
 
-        videoAdapter = new Video2Adapter(mActivity,R.layout.video_item_layout);
+        videoAdapter = new Video2Adapter(mActivity, R.layout.video_item_layout);
         mLvVideos.setAdapter(videoAdapter);
         mLvVideos.setOnItemClickListener(videoAdapter);
         mLvVideos.setOnItemLongClickListener(videoAdapter);
@@ -105,21 +104,13 @@ public class LocalVideos extends Fragment implements View.OnClickListener, Swipe
         getPermissions();
 
         mHandler.sendEmptyMessage(MSG_QUERY_START);
-//        serviceStart();
 
-    }
-
-    private void serviceStart() {
-        if(!ObserverService.isRunning()) {
-            mService = new Intent(mActivity, ObserverService.class);
-            mActivity.startService(mService);
-        }
     }
 
     private void getPermissions() {
-        if(Build.VERSION.SDK_INT>=23) {
-            if (mActivity.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE},0);
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (mActivity.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
             }
         }
     }
@@ -132,16 +123,16 @@ public class LocalVideos extends Fragment implements View.OnClickListener, Swipe
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMAIN(Object event){
-        Logger.D(TAG,"onEventMAIN");
+    public void onEventMAIN(Object event) {
+        Logger.D(TAG, "onEventMAIN");
 
-        if(event instanceof String){
-            switch ((String)event){
+        if (event instanceof String) {
+            switch ((String) event) {
                /* case VideoAdapter.EB_MSG_UPDATE_HEADER:
                     Logger.D(TAG,"receive eb event: "+event);
                     break;*/
                 case CommonUtils.SDCARD_UNMOUNTED:
-                    Toast.makeText(mActivity,"未检测到SD卡!",Toast.LENGTH_LONG).show();
+                    Toast.makeText(mActivity, "未检测到SD卡!", Toast.LENGTH_LONG).show();
                     mHandler.sendEmptyMessage(MSG_QUERY_END);
                     break;
                 default:
@@ -149,8 +140,8 @@ public class LocalVideos extends Fragment implements View.OnClickListener, Swipe
                     break;
             }
         }
-        if(event instanceof EBEvent.MainEvent){
-            switch (((EBEvent.MainEvent) event).event){
+        if (event instanceof EBEvent.MainEvent) {
+            switch (((EBEvent.MainEvent) event).event) {
                 case EBEvent.MainEvent.EVENT_MAIN_DEL_DONE:
 //                    mAdapter.updateCheckState(false);
 //                    updateHeaderView(mRLbrand,mRLoperate);
@@ -162,86 +153,22 @@ public class LocalVideos extends Fragment implements View.OnClickListener, Swipe
                     // do nothing
                     break;
             }
-            Logger.D(TAG,"receive main event");
+            Logger.D(TAG, "receive main event");
         }
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void onEventBACKGROUND(EBEvent.BackgroundEvent event){
-        if(TextUtils.equals(event.event, EBEvent.BackgroundEvent.EVENT_SYNC_DEL)){
+    public void onEventBACKGROUND(EBEvent.BackgroundEvent event) {
+        if (TextUtils.equals(event.event, EBEvent.BackgroundEvent.EVENT_SYNC_DEL)) {
             CommonUtils.deleteFiles(videoList);
             EventBus.getDefault().post(new EBEvent.MainEvent(EBEvent.MainEvent.EVENT_MAIN_DEL_DONE));
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.ASYNC)
-    public void onEventASYNC(ObserverEvent event){
-//        ObserverEvent.TYPE type = event.getTYPE();
-//        switch (type){
-//            case CREATE:
-//                CollectionUtils.addToList(videoList,event.getPath());
-//                break;
-//            case DELETE:
-//                CollectionUtils.removeFromList(videoList,event.getPath());
-//                break;
-//        }
-//        mHandler.sendEmptyMessage(MSG_QUERY_END);
-
-    }
-
-    @Subscribe(threadMode = ThreadMode.POSTING)
-    public void onEventPOSTING(){
-
-    }
-
-    /*public void updateHeaderView(View...views){
-        if(views==null || views.length==0){
-            return;
-        }
-        for (View v :
-                views) {
-            int visibility = v.getVisibility();
-            v.setVisibility((visibility == View.VISIBLE) ? View.INVISIBLE : View.VISIBLE);
-        }
-        mLvVideos.setItemsCanFocus(mRLbrand.getVisibility()==View.VISIBLE);
-    }*/
-
-   /* public void onBackPressed() {
-        if(mRLbrand.getVisibility()==View.VISIBLE) {
-//            super.onBackPressed();
-        } else {
-            updateHeaderView(mRLbrand,mRLoperate);
-        }
-    }*/
-
-    @Override
-    public void onClick(View v) {
-       /* if(v.getId()==R.id.ib_main_header_del){
-            EventBus.getDefault().post(new EBEvent.MainEvent(EBEvent.MainEvent.EVENT_MAIN_DEL_START));
-        }
-        if(v.getId() == R.id.ib_main_refresh){
-            mHandler.sendEmptyMessage(MSG_QUERY_START);
-            MediaQueryer.instance().syncLoadVideos(mActivity,true,videoList,mLoadedListener);
-        }*/
-    }
 
     @Override
     public void onRefresh() {
         videoAdapter.refresh(mHandler);
     }
 
-
-   /* @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if(buttonView.getId()==R.id.cb_main_header_all){
-            Iterator<VideoItem> iterator = videoList.iterator();
-            while(iterator.hasNext()){
-                VideoItem next = iterator.next();
-//                next.setSelected(mCBAll.isChecked());
-                Logger.D(TAG,"item checked ? "+next.isSelected());
-            }
-//            mAdapter.updateCheckState(mCBAll.isChecked());
-            mAdapter.notifyDataSetChanged();
-        }
-    }*/
 }
