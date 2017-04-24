@@ -16,9 +16,6 @@ import demo.slash.customplayer.utils.Logger;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
-/**
- * Created by PICO-USER on 2016/12/12.
- */
 public class VideoSurfaceView extends SurfaceView implements IjkMediaPlayer.OnPreparedListener, SurfaceHolder.Callback {
 
     private static final int MSG_UPDATE_SB = 100;
@@ -158,11 +155,6 @@ public class VideoSurfaceView extends SurfaceView implements IjkMediaPlayer.OnPr
         updateSeekbar();
     }
 
-    public void resumeVideo(){
-        mPlayer.start();
-        updateSeekbar();
-    }
-
     public void release(){
         mPlayer.release();
     }
@@ -193,6 +185,7 @@ public class VideoSurfaceView extends SurfaceView implements IjkMediaPlayer.OnPr
         Logger.D(LocalVideos.TAG,"holder surface changed");
         mSurfaceHolder = holder;
         mHandler.sendEmptyMessage(MSG_SURFACE_READY);
+        System.out.println("surface holder changed ,width = "+width+";height = "+height);
     }
 
     @Override
@@ -222,6 +215,7 @@ public class VideoSurfaceView extends SurfaceView implements IjkMediaPlayer.OnPr
         } else if (hMost) {
             setMeasuredDimension(wsize,mHeight);
         }
+
     }
 
     private Handler mHandler = new Handler(){

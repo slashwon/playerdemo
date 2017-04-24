@@ -7,7 +7,6 @@ import demo.slash.customplayer.bean.VideoItem;
 
 /**
  * Why did I wrote this ?
- * Created by PICO-USER on 2016/12/16.
  */
 public class CollectionUtils {
 

@@ -2,9 +2,6 @@ package demo.slash.customplayer.listener;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 
-/**
- * Created by whs on 16-12-24.
- */
 
 public class PlayerListener {
 

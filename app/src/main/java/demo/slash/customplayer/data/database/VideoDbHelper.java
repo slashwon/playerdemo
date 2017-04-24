@@ -5,9 +5,6 @@ import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-/**
- * Created by PICO-USER on 2016/12/13.
- */
 public class VideoDbHelper extends SQLiteOpenHelper {
 
     private static final int DB_VERSION = 1;

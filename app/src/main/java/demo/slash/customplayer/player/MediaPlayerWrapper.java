@@ -10,9 +10,6 @@ import demo.slash.customplayer.utils.Logger;
 import demo.slash.customplayer.view.LocalVideos;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
-/**
- * Created by PICO-USER on 2016/12/12.
- */
 public class MediaPlayerWrapper{
 
     private IjkMediaPlayer mPlayer;
